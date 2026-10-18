@@ -1,8 +1,6 @@
 package id.jaljayo.app.ui.home
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -14,15 +12,13 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -30,22 +26,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import id.jaljayo.app.ui.theme.JalJayoSpace
 import id.jaljayo.core.AudioPreset
 
-/**
- * Layar Mode Malam (NightScreen) — Inti dari pilar Malam JalJayo (BR-01 & BR-02).
- *
- * Prinsip Desain:
- * - Layar gelap (OLED black/midnight) tanpa elemen visual yang berkedip atau menyala terang.
- * - One-Tap Wind-Down: Tombol Play melingkar besar (<= 2 ketukan dari buka aplikasi).
- * - Kontrol Timer 15, 30, 45 menit dengan indikator fade-out 2 menit terakhir.
- * - Peringatan volume jika perangkat dalam keadaan bisu (0%).
- */
+/** Quiet night playback screen. Playback and timer actions remain owned by the existing service. */
 @Composable
 fun NightScreen(
     isPlaying: Boolean,
@@ -62,266 +52,311 @@ fun NightScreen(
     onRaiseVolumeClick: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
-    val scrollState = rememberScrollState()
-
     Column(
         modifier = modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
-            .padding(horizontal = 24.dp)
-            .verticalScroll(scrollState),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceBetween
+            .verticalScroll(rememberScrollState())
+            .padding(horizontal = JalJayoSpace.large),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // === 1. Header Mode Malam ===
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(top = 28.dp)
-        ) {
-            Text(
-                text = "🌙 JalJayo",
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f),
-                letterSpacing = 1.sp
-            )
-            Spacer(modifier = Modifier.height(6.dp))
-            Text(
-                text = "Mode Malam Aktif",
-                style = MaterialTheme.typography.headlineMedium.copy(
-                    fontWeight = FontWeight.Light,
-                    letterSpacing = 0.5.sp
-                ),
-                color = MaterialTheme.colorScheme.onBackground
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = "Konten video diistirahatkan untuk menjaga hormon tidurmu.",
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                textAlign = TextAlign.Center
-            )
-        }
+        NightSky(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(JalJayoSpace.nightSkyHeight)
+        )
 
-        // === 2. Peringatan Volume Hening (Jika Volume 0%) ===
-        AnimatedVisibility(
-            visible = isDeviceVolumeMuted,
-            enter = fadeIn(),
-            exit = fadeOut()
-        ) {
-            Card(
+        Text(
+            text = "Mode Malam Aktif",
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Spacer(Modifier.height(JalJayoSpace.xSmall))
+        Text(
+            text = "Konten video diistirahatkan untuk menjaga hormon tidurmu.",
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = TextAlign.Center
+        )
+
+        if (isDeviceVolumeMuted) {
+            Spacer(Modifier.height(JalJayoSpace.medium))
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 12.dp)
-                    .clickable { onRaiseVolumeClick() },
-                shape = RoundedCornerShape(12.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = Color(0xFF2D1F0E)
-                )
+                    .clip(MaterialTheme.shapes.small)
+                    .background(MaterialTheme.colorScheme.surface)
+                    .padding(
+                        horizontal = JalJayoSpace.medium,
+                        vertical = JalJayoSpace.small
+                    ),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Row(
-                    modifier = Modifier.padding(14.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                Text(
+                    text = "Volume ponsel Anda dalam keadaan hening, harap naikkan volume",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = TextAlign.Center
+                )
+                TextButton(
+                    onClick = onRaiseVolumeClick,
+                    modifier = Modifier.heightIn(min = JalJayoSpace.touchTarget)
                 ) {
-                    Text(text = "🔇", fontSize = 20.sp)
-                    Spacer(modifier = Modifier.width(12.dp))
-                    Column {
-                        Text(
-                            text = "Volume ponsel Anda dalam keadaan hening, harap naikkan volume.",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = Color(0xFFFDE68A)
-                        )
-                        Spacer(modifier = Modifier.height(2.dp))
-                        Text(
-                            text = "Ketuk untuk otomatis mengatur volume ke 50%",
-                            style = MaterialTheme.typography.labelSmall,
-                            color = Color(0xFFFDE68A).copy(alpha = 0.7f)
-                        )
-                    }
+                    Text("Naikkan volume")
                 }
             }
         }
 
-        // === 3. Tombol Utama: One-Tap Wind-Down Player ===
+        Spacer(Modifier.height(JalJayoSpace.medium))
+
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(vertical = 24.dp)
+            modifier = Modifier.padding(vertical = JalJayoSpace.small)
         ) {
-            // Tombol bulat besar ramah sentuhan di kegelapan
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .size(150.dp)
-                    .clip(CircleShape)
-                    .background(
-                        if (isPlaying) MaterialTheme.colorScheme.primary.copy(alpha = 0.15f)
-                        else MaterialTheme.colorScheme.surfaceVariant
-                    )
-                    .border(
-                        width = 2.dp,
-                        color = if (isPlaying) MaterialTheme.colorScheme.primary else Color(0xFF2A364F),
-                        shape = CircleShape
-                    )
-                    .clickable { onPlayPauseClick() }
-            ) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(
-                        text = if (isPlaying) "⏸" else "▶",
-                        fontSize = 38.sp,
-                        color = if (isPlaying) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground
-                    )
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = if (isPlaying) "Jeda" else "Putar",
-                        style = MaterialTheme.typography.labelMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Info preset yang sedang dipilih
+            PlayButton(isPlaying = isPlaying, onClick = onPlayPauseClick)
+            Spacer(Modifier.height(JalJayoSpace.medium))
             Text(
                 text = selectedPreset.displayName,
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onBackground
             )
 
-            // Status timer jika sedang aktif
             if (isTimerActive && timerRemainingMs > 0) {
                 val totalSeconds = (timerRemainingMs / 1000).toInt()
-                val minutes = totalSeconds / 60
-                val seconds = totalSeconds % 60
-                val formattedTime = "%02d:%02d".format(minutes, seconds)
-
-                Spacer(modifier = Modifier.height(8.dp))
+                val formattedTime = "%02d:%02d".format(totalSeconds / 60, totalSeconds % 60)
+                Spacer(Modifier.height(JalJayoSpace.small))
                 Text(
-                    text = "Sisa Waktu: $formattedTime",
-                    style = MaterialTheme.typography.bodyMedium.copy(
-                        color = MaterialTheme.colorScheme.primary,
-                        fontWeight = FontWeight.Medium
-                    )
+                    text = formattedTime,
+                    style = MaterialTheme.typography.displaySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-
-                if (timerRemainingMs <= 120_000L) {
-                    Text(
-                        text = "Memudar perlahan (fade-out)",
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f)
-                    )
-                }
             }
         }
 
-        // === 4. Pilihan Preset Audio & Durasi Timer ===
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(bottom = 32.dp)
-        ) {
-            // Pemilih Preset Audio
-            Text(
-                text = "PILIH SUARA RELAKSASI",
-                style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                letterSpacing = 1.sp
-            )
-            Spacer(modifier = Modifier.height(8.dp))
+        Spacer(Modifier.height(JalJayoSpace.large))
+        Text(
+            text = "Pilih suara",
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.onBackground,
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(Modifier.height(JalJayoSpace.small))
+        AudioPreset.values().toList().chunked(2).forEach { rowPresets ->
             Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(JalJayoSpace.small)
             ) {
-                AudioPreset.values().forEach { preset ->
-                    val isSelected = preset == selectedPreset
-                    Box(
-                        contentAlignment = Alignment.Center,
-                        modifier = Modifier
-                            .weight(1f)
-                            .clip(RoundedCornerShape(10.dp))
-                            .background(
-                                if (isSelected) MaterialTheme.colorScheme.surfaceVariant
-                                else MaterialTheme.colorScheme.surface
-                            )
-                            .border(
-                                width = 1.dp,
-                                color = if (isSelected) MaterialTheme.colorScheme.primary else Color(0xFF1E293B),
-                                shape = RoundedCornerShape(10.dp)
-                            )
-                            .clickable { onPresetSelect(preset) }
-                            .padding(vertical = 10.dp, horizontal = 4.dp)
-                    ) {
-                        Text(
-                            text = when (preset) {
-                                AudioPreset.THETA_6HZ -> "Theta 6Hz"
-                                AudioPreset.BROWN_NOISE -> "Brown Noise"
-                                AudioPreset.RAIN_SOUND -> "Hujan"
-                                AudioPreset.OCEAN_WAVES -> "Ombak"
-                            },
-                            style = MaterialTheme.typography.labelMedium,
-                            color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
-                            textAlign = TextAlign.Center
-                        )
-                    }
-                }
-            }
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            // Pemilih Timer Tidur
-            Text(
-                text = "TIMER TIDUR (FADE-OUT 2 MENIT)",
-                style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                letterSpacing = 1.sp
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                listOf(15, 30, 45).forEach { minutes ->
-                    val isSelected = minutes == selectedDuration
-                    Box(
-                        contentAlignment = Alignment.Center,
-                        modifier = Modifier
-                            .weight(1f)
-                            .clip(RoundedCornerShape(10.dp))
-                            .background(
-                                if (isSelected) MaterialTheme.colorScheme.surfaceVariant
-                                else MaterialTheme.colorScheme.surface
-                            )
-                            .border(
-                                width = 1.dp,
-                                color = if (isSelected) MaterialTheme.colorScheme.primary else Color(0xFF1E293B),
-                                shape = RoundedCornerShape(10.dp)
-                            )
-                            .clickable {
-                                onDurationSelect(minutes)
-                                if (isPlaying) {
-                                    onStartTimerClick(minutes)
-                                }
-                            }
-                            .padding(vertical = 10.dp)
-                    ) {
-                        Text(
-                            text = "$minutes Menit",
-                            style = MaterialTheme.typography.labelMedium,
-                            color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                }
-            }
-
-            // Tombol aksi timer
-            if (isTimerActive) {
-                Spacer(modifier = Modifier.height(10.dp))
-                TextButton(onClick = onCancelTimerClick) {
-                    Text(
-                        text = "Hentikan Timer",
-                        style = MaterialTheme.typography.labelMedium,
-                        color = MaterialTheme.colorScheme.error
+                rowPresets.forEach { preset ->
+                    NightChoice(
+                        label = preset.label(),
+                        selected = preset == selectedPreset,
+                        modifier = Modifier.weight(1f),
+                        onClick = { onPresetSelect(preset) }
                     )
                 }
+                if (rowPresets.size == 1) Spacer(Modifier.weight(1f))
+            }
+            Spacer(Modifier.height(JalJayoSpace.small))
+        }
+
+        Spacer(Modifier.height(JalJayoSpace.medium))
+        Text(
+            text = "Timer tidur",
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.onBackground,
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(Modifier.height(JalJayoSpace.small))
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(JalJayoSpace.small)
+        ) {
+            listOf(15, 30, 45).forEach { minutes ->
+                NightChoice(
+                    label = "$minutes menit",
+                    selected = minutes == selectedDuration,
+                    modifier = Modifier.weight(1f),
+                    onClick = {
+                        onDurationSelect(minutes)
+                        if (isPlaying) onStartTimerClick(minutes)
+                    }
+                )
+            }
+        }
+
+        if (isTimerActive) {
+            TextButton(
+                onClick = onCancelTimerClick,
+                modifier = Modifier
+                    .align(Alignment.End)
+                    .heightIn(min = JalJayoSpace.touchTarget)
+            ) {
+                Text("Hentikan timer", color = MaterialTheme.colorScheme.onSurfaceVariant)
+            }
+        }
+        Spacer(Modifier.height(JalJayoSpace.xLarge))
+    }
+}
+
+@Composable
+private fun NightChoice(
+    label: String,
+    selected: Boolean,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
+    val borderColor = if (selected) MaterialTheme.colorScheme.primary
+    else MaterialTheme.colorScheme.outline
+    val fillColor = if (selected) MaterialTheme.colorScheme.primary.copy(alpha = 0.12f)
+    else MaterialTheme.colorScheme.surface
+
+    Box(
+        modifier = modifier
+            .heightIn(min = JalJayoSpace.audioChoiceHeight)
+            .clip(CircleShape)
+            .background(fillColor)
+            .border(
+                width = if (selected) JalJayoSpace.selectedOutlineWidth else JalJayoSpace.outlineWidth,
+                color = borderColor,
+                shape = CircleShape
+            )
+            .selectable(
+                selected = selected,
+                role = Role.RadioButton,
+                onClick = onClick
+            )
+            .padding(horizontal = JalJayoSpace.small, vertical = JalJayoSpace.xSmall),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.labelMedium,
+            color = if (selected) MaterialTheme.colorScheme.primary
+            else MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = TextAlign.Center
+        )
+    }
+}
+
+@Composable
+private fun PlayButton(isPlaying: Boolean, onClick: () -> Unit) {
+    val shape = CircleShape
+    val fill = if (isPlaying) MaterialTheme.colorScheme.surface
+    else MaterialTheme.colorScheme.secondary
+    val edge = if (isPlaying) MaterialTheme.colorScheme.outline
+    else MaterialTheme.colorScheme.secondary
+    val iconColor = if (isPlaying) MaterialTheme.colorScheme.onSurfaceVariant
+    else MaterialTheme.colorScheme.onSecondary
+    val label = if (isPlaying) "Jeda" else "Putar"
+
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Box(
+            modifier = Modifier
+                .size(JalJayoSpace.playButton)
+                .clip(shape)
+                .background(fill)
+                .border(
+                    width = if (isPlaying) JalJayoSpace.outlineWidth else JalJayoSpace.selectedOutlineWidth,
+                    color = edge,
+                    shape = shape
+                )
+                .clickable(
+                    role = Role.Button,
+                    onClickLabel = if (isPlaying) "Jeda suara" else "Putar suara",
+                    onClick = onClick
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Canvas(Modifier.size(JalJayoSpace.medium)) {
+                    if (isPlaying) {
+                        val barWidth = size.width * 0.24f
+                        val barHeight = size.height * 0.72f
+                        val gap = size.width * 0.16f
+                        drawRoundRect(
+                            color = iconColor,
+                            topLeft = androidx.compose.ui.geometry.Offset(
+                                x = (size.width - (barWidth * 2 + gap)) / 2,
+                                y = (size.height - barHeight) / 2
+                            ),
+                            size = androidx.compose.ui.geometry.Size(barWidth, barHeight),
+                            cornerRadius = androidx.compose.ui.geometry.CornerRadius(barWidth / 2)
+                        )
+                        drawRoundRect(
+                            color = iconColor,
+                            topLeft = androidx.compose.ui.geometry.Offset(
+                                x = (size.width - (barWidth * 2 + gap)) / 2 + barWidth + gap,
+                                y = (size.height - barHeight) / 2
+                            ),
+                            size = androidx.compose.ui.geometry.Size(barWidth, barHeight),
+                            cornerRadius = androidx.compose.ui.geometry.CornerRadius(barWidth / 2)
+                        )
+                    } else {
+                        val triangle = Path().apply {
+                            moveTo(size.width * 0.34f, size.height * 0.2f)
+                            lineTo(size.width * 0.78f, size.height * 0.5f)
+                            lineTo(size.width * 0.34f, size.height * 0.8f)
+                            close()
+                        }
+                        drawPath(triangle, color = iconColor)
+                    }
+                }
+                Spacer(Modifier.height(JalJayoSpace.xSmall))
+                Text(
+                    text = label,
+                    style = MaterialTheme.typography.labelMedium,
+                    color = iconColor
+                )
             }
         }
     }
+}
+
+/** Static night-sky motif, kept decorative and out of the TalkBack reading order. */
+@Composable
+private fun NightSky(modifier: Modifier = Modifier) {
+    val background = MaterialTheme.colorScheme.background
+    val starlight = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.42f)
+    val moonlight = MaterialTheme.colorScheme.secondary.copy(alpha = 0.78f)
+    val stars = listOf(
+        0.10f to 0.34f, 0.21f to 0.18f, 0.34f to 0.40f, 0.43f to 0.16f,
+        0.58f to 0.28f, 0.72f to 0.12f, 0.85f to 0.35f, 0.93f to 0.20f,
+        0.17f to 0.62f, 0.39f to 0.68f, 0.66f to 0.60f, 0.89f to 0.68f
+    )
+
+    Canvas(modifier.clearAndSetSemantics {}) {
+        val dotRadius = JalJayoSpace.xSmall.toPx() / 2
+        stars.forEachIndexed { index, (x, y) ->
+            drawCircle(
+                color = starlight.copy(alpha = if (index % 3 == 0) 0.78f else 0.5f),
+                radius = if (index % 4 == 0) dotRadius else dotRadius * 0.62f,
+                center = androidx.compose.ui.geometry.Offset(size.width * x, size.height * y)
+            )
+        }
+
+        val moonRadius = JalJayoSpace.moonDiameter.toPx() / 2
+        val moonCenter = androidx.compose.ui.geometry.Offset(size.width * 0.5f, size.height * 0.45f)
+        drawCircle(color = moonlight, radius = moonRadius, center = moonCenter)
+        drawCircle(
+            color = background,
+            radius = moonRadius,
+            center = moonCenter.copy(x = moonCenter.x + moonRadius * 0.48f, y = moonCenter.y - moonRadius * 0.35f)
+        )
+
+        val crossStars = listOf(0.29f to 0.31f, 0.77f to 0.49f, 0.55f to 0.77f)
+        crossStars.forEach { (x, y) ->
+            val center = androidx.compose.ui.geometry.Offset(size.width * x, size.height * y)
+            val arm = JalJayoSpace.small.toPx()
+            val stroke = JalJayoSpace.starStrokeWidth.toPx()
+            drawLine(starlight, center.copy(y = center.y - arm), center.copy(y = center.y + arm), stroke, StrokeCap.Round)
+            drawLine(starlight, center.copy(x = center.x - arm), center.copy(x = center.x + arm), stroke, StrokeCap.Round)
+        }
+    }
+}
+
+private fun AudioPreset.label(): String = when (this) {
+    AudioPreset.THETA_6HZ -> "Theta 6Hz"
+    AudioPreset.BROWN_NOISE -> "Brown Noise"
+    AudioPreset.RAIN_SOUND -> "Hujan"
+    AudioPreset.OCEAN_WAVES -> "Ombak"
 }

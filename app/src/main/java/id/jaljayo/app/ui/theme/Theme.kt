@@ -1,52 +1,54 @@
 package id.jaljayo.app.ui.theme
 
-import android.app.Activity
-import android.os.Build
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
+import id.jaljayo.core.Mode
 
 private val NightColorScheme = darkColorScheme(
     primary = NightPrimary,
     onPrimary = NightOnPrimary,
-    secondary = NightSecondary,
-    onSecondary = NightOnSecondary,
+    secondary = NightAccent,
+    onSecondary = NightOnAccent,
+    secondaryContainer = NightSurface,
+    onSecondaryContainer = NightOnBackground,
     background = NightBackground,
     onBackground = NightOnBackground,
     surface = NightSurface,
     onSurface = NightOnBackground,
-    surfaceVariant = NightSurfaceVariant,
-    onSurfaceVariant = NightOnSurfaceVariant
+    surfaceVariant = NightSurface,
+    onSurfaceVariant = NightTextSecondary,
+    outline = NightOutline,
+    error = NightError
 )
 
 private val DayColorScheme = lightColorScheme(
     primary = DayPrimary,
     onPrimary = DayOnPrimary,
+    secondary = DayAccent,
+    onSecondary = DayOnAccent,
+    secondaryContainer = DayAccentSoft,
+    onSecondaryContainer = DayOnAccent,
     background = DayBackground,
     onBackground = DayOnBackground,
     surface = DaySurface,
     onSurface = DayOnBackground,
-    surfaceVariant = DaySurfaceVariant,
-    onSurfaceVariant = DayOnSurfaceVariant
+    surfaceVariant = DaySurface,
+    onSurfaceVariant = DayTextSecondary,
+    outline = DayOutline,
+    error = DayError
 )
 
 @Composable
 fun JalJayoTheme(
-    isNightMode: Boolean = true,
+    mode: Mode,
     content: @Composable () -> Unit
 ) {
-    // Mode malam selalu menggunakan NightColorScheme terlepas dari dynamic color
-    // untuk menjamin proteksi emisi cahaya biru saat di kasur.
-    val colorScheme = if (isNightMode) NightColorScheme else DayColorScheme
-
     MaterialTheme(
-        colorScheme = colorScheme,
+        colorScheme = if (mode == Mode.NIGHT) NightColorScheme else DayColorScheme,
         typography = Typography,
+        shapes = JalJayoShapes,
         content = content
     )
 }

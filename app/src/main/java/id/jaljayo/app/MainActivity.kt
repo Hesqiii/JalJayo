@@ -6,6 +6,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.media.AudioManager
 import android.net.Uri
@@ -48,6 +49,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -64,6 +66,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
+import androidx.core.view.WindowCompat
 import androidx.media3.common.Player
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionCommand
@@ -129,6 +132,18 @@ class MainActivity : ComponentActivity() {
     private var isBatteryOptimizing by mutableStateOf(false)
     private var testAlarmStatus by mutableStateOf<String?>(null)
 
+    // State Izin Notifikasi (Android 13+)
+    private var isNotificationPermissionGranted by mutableStateOf(true)
+
+    // State Pengukuran Kinerja (NFR-01)
+    private var playRequestTimestamp by mutableLongStateOf(0L)
+    private var lastAudioLatencyMs by mutableLongStateOf(-1L)
+
+    private fun getMemoryUsageMB(): Long {
+        val runtime = Runtime.getRuntime()
+        return (runtime.totalMemory() - runtime.freeMemory()) / (1024 * 1024)
+    }
+
     // Navigasi layar (onboarding / home / settings)
     private var currentScreen by mutableStateOf("loading") // "loading", "onboarding", "home", "settings"
 
@@ -142,7 +157,9 @@ class MainActivity : ComponentActivity() {
     // Launcher izin notifikasi (Android 13+)
     private val notificationPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
-    ) { _ -> }
+    ) { isGranted ->
+        isNotificationPermissionGranted = isGranted
+    }
 
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -218,7 +235,14 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
-            JalJayoTheme(isNightMode = effectiveMode == Mode.NIGHT) {
+            JalJayoTheme(mode = effectiveMode) {
+                SideEffect {
+                    val insetsController = WindowCompat.getInsetsController(window, window.decorView)
+                    val useDarkSystemIcons = effectiveMode == Mode.DAY
+                    insetsController.isAppearanceLightStatusBars = useDarkSystemIcons
+                    insetsController.isAppearanceLightNavigationBars = useDarkSystemIcons
+                }
+
                 when (currentScreen) {
                     "loading" -> {
                         // Layar kosong saat DataStore dimuat (biasanya < 200ms)
@@ -282,11 +306,13 @@ class MainActivity : ComponentActivity() {
                             modifier = Modifier.fillMaxSize(),
                             snackbarHost = { SnackbarHost(snackbarHostState) },
                             bottomBar = {
-                                DemoControlBar(
-                                    effectiveMode = effectiveMode,
-                                    isOverridden = debugModeOverride != null,
-                                    onOpenDebugClick = { showDebugSheet = true }
-                                )
+                                if (applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0) {
+                                    DemoControlBar(
+                                        effectiveMode = effectiveMode,
+                                        isOverridden = debugModeOverride != null,
+                                        onOpenDebugClick = { showDebugSheet = true }
+                                    )
+                                }
                             }
                         ) { innerPadding ->
                             Box(
@@ -338,6 +364,10 @@ class MainActivity : ComponentActivity() {
                                             sleepSchedule = sleepSchedule,
                                             todayCard = todayCard,
                                             isCardCompleted = todayCard?.id in completedCards,
+                                            isNotificationPermissionGranted = isNotificationPermissionGranted,
+                                            onOpenNotificationSettings = {
+                                                openNotificationSettings()
+                                            },
                                             onMarkCardDone = {
                                                 todayCard?.let { card ->
                                                     coroutineScope.launch {
@@ -380,6 +410,8 @@ class MainActivity : ComponentActivity() {
                                         onOpenNotificationSettings = {
                                             openNotificationSettings()
                                         },
+                                        audioLatencyMs = lastAudioLatencyMs,
+                                        memoryUsageMB = getMemoryUsageMB(),
                                         onDismiss = { showDebugSheet = false }
                                     )
                                 }
@@ -393,9 +425,21 @@ class MainActivity : ComponentActivity() {
 
     override fun onResume() {
         super.onResume()
+        checkNotificationPermission()
         checkBatteryOptimization()
         checkDeviceVolume()
         currentMode = appClock.getCurrentMode()
+    }
+
+    private fun checkNotificationPermission() {
+        isNotificationPermissionGranted = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED
+        } else {
+            true
+        }
     }
 
     private fun checkDeviceVolume() {
@@ -455,9 +499,13 @@ class MainActivity : ComponentActivity() {
     private fun requestNotificationPermissionIfNeeded() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             val status = ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
-            if (status != PackageManager.PERMISSION_GRANTED) {
+            val granted = status == PackageManager.PERMISSION_GRANTED
+            isNotificationPermissionGranted = granted
+            if (!granted) {
                 notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
             }
+        } else {
+            isNotificationPermissionGranted = true
         }
     }
 
@@ -487,6 +535,10 @@ class MainActivity : ComponentActivity() {
                 controller.addListener(object : Player.Listener {
                     override fun onIsPlayingChanged(playing: Boolean) {
                         isPlaying = playing
+                        if (playing && playRequestTimestamp > 0L) {
+                            lastAudioLatencyMs = System.currentTimeMillis() - playRequestTimestamp
+                            playRequestTimestamp = 0L
+                        }
                     }
                 })
             } catch (_: Exception) {}
@@ -506,6 +558,7 @@ class MainActivity : ComponentActivity() {
         if (controller.isPlaying) {
             controller.pause()
         } else {
+            playRequestTimestamp = System.currentTimeMillis()
             controller.play()
             if (!isTimerActive) {
                 startTimer(selectedDuration)
@@ -578,30 +631,22 @@ private fun DemoControlBar(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.95f))
-            .padding(horizontal = 16.dp, vertical = 6.dp),
+            .background(MaterialTheme.colorScheme.background)
+            .padding(horizontal = 24.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(
-                text = if (effectiveMode == Mode.NIGHT) "🌙 Mode: MALAM" else "☀️ Mode: SIANG",
-                style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            if (isOverridden) {
-                Spacer(modifier = Modifier.width(6.dp))
+        if (isOverridden) {
                 Text(
-                    text = "(Simulasi)",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.primary
+                    text = if (effectiveMode == Mode.NIGHT) "Simulasi malam aktif" else "Simulasi siang aktif",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-            }
         }
 
         TextButton(onClick = onOpenDebugClick) {
             Text(
-                text = "🛠️ Menu Demo",
+                text = "Demo",
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.primary
             )
@@ -623,6 +668,8 @@ private fun DebugDemoPanel(
     onTriggerTestAlarm: () -> Unit,
     onCancelTestAlarm: () -> Unit,
     onOpenNotificationSettings: () -> Unit,
+    audioLatencyMs: Long,
+    memoryUsageMB: Long,
     onDismiss: () -> Unit
 ) {
     Column(
@@ -729,6 +776,69 @@ private fun DebugDemoPanel(
             style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
+
+        Spacer(modifier = Modifier.height(16.dp))
+        HorizontalDivider()
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Benchmark Kinerja & Memori NFR-01
+        Text(
+            text = "BENCHMARK KINERJA & MEMORI (NFR-01)",
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.primary,
+            letterSpacing = 1.sp
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(12.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+            )
+        ) {
+            Column(modifier = Modifier.padding(14.dp)) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "Latensi Mulai Audio:",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Text(
+                        text = if (audioLatencyMs >= 0)
+                            "$audioLatencyMs ms (Target <200ms ${if (audioLatencyMs < 200) "✅" else "⚠️"})"
+                        else
+                            "Tekan Play untuk Mengukur",
+                        style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold),
+                        color = if (audioLatencyMs in 0..199)
+                            MaterialTheme.colorScheme.primary
+                        else
+                            MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "Penggunaan Heap RAM:",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Text(
+                        text = "$memoryUsageMB MB (Target <40MB ${if (memoryUsageMB < 40) "✅" else "ℹ️"})",
+                        style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold),
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
+            }
+        }
 
         Spacer(modifier = Modifier.height(20.dp))
     }

@@ -114,6 +114,7 @@ JalJayo/
 |---|---|---|
 | **Bahasa** | Kotlin 2.0 (Kotlin DSL) | Bahasa resmi Android modern, null-safety, dan coroutines. |
 | **UI Toolkit** | Jetpack Compose (Material 3) | Declarative UI reaktif, modern, dan performa tinggi tanpa XML. |
+| **Tipografi** | Plus Jakarta Sans (Tokotype) | Dibundel dari folder `static/`; lisensi SIL Open Font License 1.1 ([teks lisensi](https://github.com/tokotype/PlusJakartaSans/blob/master/OFL.txt)). |
 | **Audio Engine** | AndroidX Media3 (ExoPlayer 1.11.1) | Standar resmi Google untuk background audio dan kontrol lock screen. |
 | **Penyimpanan** | Jetpack DataStore Preferences | Pengganti modern SharedPreferences, asinkron via Coroutine Flow. |
 | **Penjadwal** | Android `AlarmManager` (`setAlarmClock`) | Membangunkan Doze mode & bypass freezer baterai vendor Android. |

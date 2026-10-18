@@ -1,27 +1,28 @@
 package id.jaljayo.app.ui.settings
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
+import androidx.compose.material3.Button
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -34,24 +35,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import id.jaljayo.app.ui.theme.JalJayoSpace
 import id.jaljayo.core.AudioPreset
-import id.jaljayo.core.SleepSchedule
 import id.jaljayo.core.calculateSleepSchedule
 import java.time.LocalTime
 
-/**
- * Layar Pengaturan — mengubah jam bangun & preset audio default.
- *
- * @param currentWakeHour    Jam bangun tersimpan saat ini.
- * @param currentWakeMinute  Menit bangun tersimpan saat ini.
- * @param currentPreset      Preset audio tersimpan saat ini.
- * @param onSave             Dipanggil saat pengguna menyimpan perubahan.
- * @param onBack             Dipanggil saat tombol Kembali ditekan.
- */
 @Composable
 fun SettingsScreen(
     currentWakeHour: Int,
@@ -74,19 +67,25 @@ fun SettingsScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
+            .windowInsetsPadding(WindowInsets.safeDrawing)
             .verticalScroll(rememberScrollState())
     ) {
-        // Top bar
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 12.dp, vertical = 8.dp),
+                .heightIn(min = JalJayoSpace.settingsTopBarHeight)
+                .padding(horizontal = JalJayoSpace.small),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(onClick = onBack) {
-                Text(text = "←", fontSize = 22.sp, color = MaterialTheme.colorScheme.onBackground)
+            IconButton(
+                onClick = onBack,
+                modifier = Modifier.semantics {
+                    contentDescription = "Kembali"
+                }
+            ) {
+                Text("←", style = MaterialTheme.typography.titleLarge)
             }
-            Spacer(modifier = Modifier.width(4.dp))
+            Spacer(Modifier.width(JalJayoSpace.xSmall))
             Text(
                 text = "Pengaturan",
                 style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
@@ -94,260 +93,283 @@ fun SettingsScreen(
             )
         }
 
-        Column(modifier = Modifier.padding(horizontal = 24.dp)) {
-
-            // === Seksi Jam Bangun ===
-            SectionHeader(title = "JAM BANGUN PAGI")
-            Spacer(modifier = Modifier.height(12.dp))
-
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = JalJayoSpace.large)
+        ) {
+            Spacer(Modifier.height(JalJayoSpace.small))
+            Text(
+                text = "Jam bangun",
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+            Spacer(Modifier.height(JalJayoSpace.xSmall))
+            Text(
+                text = "Pilih waktu kamu ingin memulai hari.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Spacer(Modifier.height(JalJayoSpace.medium))
             Text(
                 text = "%02d:%02d".format(wakeHour, wakeMinute),
-                style = MaterialTheme.typography.displayMedium.copy(fontWeight = FontWeight.Bold),
+                style = MaterialTheme.typography.displaySmall,
                 color = MaterialTheme.colorScheme.primary,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth()
             )
-            Spacer(modifier = Modifier.height(16.dp))
 
-            Text(
-                text = "JAM",
-                style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.primary,
-                letterSpacing = 1.sp
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                listOf(4, 5, 6, 7, 8, 9).forEach { hour ->
-                    val selected = wakeHour == hour
-                    Box(
-                        contentAlignment = Alignment.Center,
-                        modifier = Modifier
-                            .weight(1f)
-                            .height(44.dp)
-                            .clip(RoundedCornerShape(10.dp))
-                            .background(
-                                if (selected) MaterialTheme.colorScheme.primary
-                                else MaterialTheme.colorScheme.surface
-                            )
-                            .clickable { wakeHour = hour }
-                    ) {
-                        Text(
-                            text = "%02d".format(hour),
-                            style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
-                            color = if (selected) MaterialTheme.colorScheme.onPrimary
-                            else MaterialTheme.colorScheme.onBackground
-                        )
-                    }
-                }
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                text = "MENIT",
-                style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.primary,
-                letterSpacing = 1.sp
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                listOf(0, 15, 30, 45).forEach { minute ->
-                    val selected = wakeMinute == minute
-                    Box(
-                        contentAlignment = Alignment.Center,
-                        modifier = Modifier
-                            .weight(1f)
-                            .height(44.dp)
-                            .clip(RoundedCornerShape(10.dp))
-                            .background(
-                                if (selected) MaterialTheme.colorScheme.primary
-                                else MaterialTheme.colorScheme.surface
-                            )
-                            .clickable { wakeMinute = minute }
-                    ) {
-                        Text(
-                            text = ":%02d".format(minute),
-                            style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
-                            color = if (selected) MaterialTheme.colorScheme.onPrimary
-                            else MaterialTheme.colorScheme.onBackground
-                        )
-                    }
-                }
-            }
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            // Preview jadwal sirkadian hasil perubahan
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(14.dp),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-                elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
-            ) {
+            Spacer(Modifier.height(JalJayoSpace.medium))
+            Text("Jam", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Spacer(Modifier.height(JalJayoSpace.xSmall))
+            listOf(4, 5, 6, 7, 8, 9).chunked(3).forEach { hourRow ->
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    horizontalArrangement = Arrangement.SpaceEvenly
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(JalJayoSpace.small)
                 ) {
-                    SchedulePreviewItem(label = "Pengingat", time = schedule.anchorTime.toString())
-                    SchedulePreviewItem(label = "Jam Tidur", time = schedule.bedtime.toString())
-                    SchedulePreviewItem(label = "Jam Bangun", time = schedule.wakeTime.toString())
+                    hourRow.forEach { hour ->
+                        TimeChoice(
+                            label = "%02d".format(hour),
+                            selected = wakeHour == hour,
+                            modifier = Modifier.weight(1f),
+                            onClick = { wakeHour = hour }
+                        )
+                    }
+                }
+                Spacer(Modifier.height(JalJayoSpace.small))
+            }
+
+            Spacer(Modifier.height(JalJayoSpace.small))
+            Text("Menit", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Spacer(Modifier.height(JalJayoSpace.xSmall))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(JalJayoSpace.small)
+            ) {
+                listOf(0, 15, 30, 45).forEach { minute ->
+                    TimeChoice(
+                        label = ":%02d".format(minute),
+                        selected = wakeMinute == minute,
+                        modifier = Modifier.weight(1f),
+                        onClick = { wakeMinute = minute }
+                    )
                 }
             }
 
-            Spacer(modifier = Modifier.height(28.dp))
-            HorizontalDivider(color = MaterialTheme.colorScheme.surfaceVariant)
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(Modifier.height(JalJayoSpace.medium))
+            SchedulePreview(
+                reminderTime = schedule.anchorTime.toString(),
+                bedtime = schedule.bedtime.toString(),
+                wakeTime = schedule.wakeTime.toString()
+            )
 
-            // === Seksi Preset Audio ===
-            SectionHeader(title = "AUDIO RELAKSASI DEFAULT")
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(Modifier.height(JalJayoSpace.xLarge))
+            Text(
+                text = "Audio relaksasi default",
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+            Spacer(Modifier.height(JalJayoSpace.xSmall))
+            Text(
+                text = "Suara yang dipilih akan digunakan saat kamu membuka pemutar malam.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Spacer(Modifier.height(JalJayoSpace.small))
 
             AudioPreset.entries.forEach { preset ->
                 val selected = selectedPreset == preset
+                val shape = MaterialTheme.shapes.medium
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom = 10.dp)
-                        .clickable { selectedPreset = preset },
-                    shape = RoundedCornerShape(14.dp),
+                        .padding(bottom = JalJayoSpace.small)
+                        .border(
+                            width = if (selected) JalJayoSpace.selectedOutlineWidth else JalJayoSpace.outlineWidth,
+                            color = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline,
+                            shape = shape
+                        )
+                        .selectable(
+                            selected = selected,
+                            role = Role.RadioButton,
+                            onClick = { selectedPreset = preset }
+                        ),
+                    shape = shape,
                     colors = CardDefaults.cardColors(
-                        containerColor = if (selected) MaterialTheme.colorScheme.primaryContainer
+                        containerColor = if (selected) MaterialTheme.colorScheme.secondaryContainer
                         else MaterialTheme.colorScheme.surface
                     ),
-                    elevation = CardDefaults.cardElevation(
-                        defaultElevation = if (selected) 3.dp else 1.dp
-                    )
+                    elevation = CardDefaults.cardElevation(defaultElevation = JalJayoSpace.xSmall)
                 ) {
                     Row(
-                        modifier = Modifier.padding(16.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .heightIn(min = JalJayoSpace.settingsChoiceHeight)
+                            .padding(horizontal = JalJayoSpace.medium, vertical = JalJayoSpace.small),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(
-                            text = presetEmoji(preset),
-                            fontSize = 24.sp
-                        )
-                        Spacer(modifier = Modifier.width(14.dp))
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
                                 text = preset.displayName,
-                                style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.SemiBold),
-                                color = MaterialTheme.colorScheme.onBackground
+                                style = MaterialTheme.typography.titleSmall,
+                                color = if (selected) MaterialTheme.colorScheme.onSecondaryContainer
+                                else MaterialTheme.colorScheme.onSurface
                             )
+                            Spacer(Modifier.height(JalJayoSpace.xSmall))
                             Text(
-                                text = presetDesc(preset),
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                text = presetDescription(preset),
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = if (selected) MaterialTheme.colorScheme.onSecondaryContainer
+                                else MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
                         if (selected) {
                             Text(
-                                text = "✓",
+                                text = "Terpilih",
+                                style = MaterialTheme.typography.labelMedium,
                                 color = MaterialTheme.colorScheme.primary,
-                                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
+                                modifier = Modifier.padding(start = JalJayoSpace.small)
                             )
                         }
                     }
                 }
             }
 
-            Spacer(modifier = Modifier.height(20.dp))
-            HorizontalDivider(color = MaterialTheme.colorScheme.surfaceVariant)
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(Modifier.height(JalJayoSpace.large))
+            Text(
+                text = "Riwayat sesi lokal",
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+            Spacer(Modifier.height(JalJayoSpace.small))
+            SessionHistory(
+                totalSessionsCount = totalSessionsCount,
+                lastSessionDuration = lastSessionDuration
+            )
 
-            // === Seksi Riwayat Sesi Relaksasi (UCS-01) ===
-            SectionHeader(title = "RIWAYAT SESI TIDUR LOKAL")
-            Spacer(modifier = Modifier.height(10.dp))
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(14.dp),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-                elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
-            ) {
-                Row(
-                    modifier = Modifier.padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(text = "📊", fontSize = 24.sp)
-                    Spacer(modifier = Modifier.width(14.dp))
-                    Column {
-                        Text(
-                            text = if (totalSessionsCount > 0)
-                                "$totalSessionsCount Sesi Relaksasi Selesai"
-                            else
-                                "Belum Ada Sesi Tersimpan",
-                            style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.SemiBold),
-                            color = MaterialTheme.colorScheme.onBackground
-                        )
-                        Spacer(modifier = Modifier.height(2.dp))
-                        Text(
-                            text = if (totalSessionsCount > 0 && lastSessionDuration > 0)
-                                "Sesi terakhir berdurasi $lastSessionDuration menit (100% data offline)"
-                            else
-                                "Riwayat sesi akan dicatat otomatis setelah kamu memutar audio malam",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                }
-            }
-
-            Spacer(modifier = Modifier.height(28.dp))
-
+            Spacer(Modifier.height(JalJayoSpace.large))
             Button(
                 onClick = { onSave(wakeHour, wakeMinute, selectedPreset) },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(52.dp),
-                shape = RoundedCornerShape(14.dp)
+                    .heightIn(min = JalJayoSpace.settingsChoiceHeight),
+                shape = CircleShape
             ) {
-                Text(
-                    text = "Simpan Pengaturan",
-                    style = MaterialTheme.typography.titleSmall
-                )
+                Text("Simpan Pengaturan", style = MaterialTheme.typography.titleSmall)
             }
-
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(Modifier.height(JalJayoSpace.large))
         }
     }
 }
 
 @Composable
-private fun SectionHeader(title: String) {
-    Text(
-        text = title,
-        style = MaterialTheme.typography.labelSmall,
-        color = MaterialTheme.colorScheme.primary,
-        letterSpacing = 1.sp
-    )
-}
-
-@Composable
-private fun SchedulePreviewItem(label: String, time: String) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(
-            text = time,
-            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-            color = MaterialTheme.colorScheme.onBackground
-        )
+private fun TimeChoice(
+    label: String,
+    selected: Boolean,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
+    val shape = MaterialTheme.shapes.small
+    Box(
+        modifier = modifier
+            .heightIn(min = JalJayoSpace.settingsChoiceHeight)
+            .clip(shape)
+            .background(
+                if (selected) MaterialTheme.colorScheme.primary
+                else MaterialTheme.colorScheme.surface
+            )
+            .border(
+                width = if (selected) JalJayoSpace.selectedOutlineWidth else JalJayoSpace.outlineWidth,
+                color = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline,
+                shape = shape
+            )
+            .selectable(
+                selected = selected,
+                role = Role.RadioButton,
+                onClick = onClick
+            ),
+        contentAlignment = Alignment.Center
+    ) {
         Text(
             text = label,
-            style = MaterialTheme.typography.labelSmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            style = MaterialTheme.typography.titleSmall,
+            color = if (selected) MaterialTheme.colorScheme.onPrimary
+            else MaterialTheme.colorScheme.onSurface,
+            modifier = Modifier.padding(JalJayoSpace.xSmall)
         )
     }
 }
 
-private fun presetEmoji(preset: AudioPreset) = when (preset) {
-    AudioPreset.THETA_6HZ -> "🧠"
-    AudioPreset.BROWN_NOISE -> "🔊"
-    AudioPreset.RAIN_SOUND -> "🌧️"
-    AudioPreset.OCEAN_WAVES -> "🌊"
+@Composable
+private fun SchedulePreview(reminderTime: String, bedtime: String, wakeTime: String) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = MaterialTheme.shapes.medium,
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = JalJayoSpace.xSmall)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(JalJayoSpace.medium),
+            horizontalArrangement = Arrangement.spacedBy(JalJayoSpace.xSmall)
+        ) {
+            SchedulePreviewItem("Pengingat", reminderTime, Modifier.weight(1f))
+            SchedulePreviewItem("Jam tidur", bedtime, Modifier.weight(1f))
+            SchedulePreviewItem("Bangun", wakeTime, Modifier.weight(1f))
+        }
+    }
 }
 
-private fun presetDesc(preset: AudioPreset) = when (preset) {
-    AudioPreset.THETA_6HZ -> "Ideal untuk overthinking & racing thoughts"
-    AudioPreset.BROWN_NOISE -> "Ideal untuk lingkungan bising & kosan ramai"
-    AudioPreset.RAIN_SOUND -> "Suara hujan yang menenangkan"
-    AudioPreset.OCEAN_WAVES -> "Suara ombak untuk relaksasi dalam"
+@Composable
+private fun SchedulePreviewItem(label: String, time: String, modifier: Modifier = Modifier) {
+    Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
+        Text(
+            text = time,
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.onSurface,
+            textAlign = TextAlign.Center
+        )
+        Text(
+            text = label,
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = TextAlign.Center
+        )
+    }
+}
+
+@Composable
+private fun SessionHistory(totalSessionsCount: Int, lastSessionDuration: Int) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = MaterialTheme.shapes.medium,
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = JalJayoSpace.xSmall)
+    ) {
+        Column(modifier = Modifier.padding(JalJayoSpace.medium)) {
+            Text(
+                text = if (totalSessionsCount > 0) "$totalSessionsCount sesi tersimpan"
+                else "Belum ada sesi",
+                style = MaterialTheme.typography.titleSmall,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+            Spacer(Modifier.height(JalJayoSpace.xSmall))
+            Text(
+                text = if (totalSessionsCount > 0 && lastSessionDuration > 0)
+                    "Sesi terakhir berlangsung $lastSessionDuration menit."
+                else
+                    "Sesi yang kamu putar akan muncul di sini.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+    }
+}
+
+private fun presetDescription(preset: AudioPreset): String = when (preset) {
+    AudioPreset.THETA_6HZ -> "Untuk saat pikiran terasa ramai"
+    AudioPreset.BROWN_NOISE -> "Untuk membantu meredam suara sekitar"
+    AudioPreset.RAIN_SOUND -> "Suara hujan untuk menemani waktu istirahat"
+    AudioPreset.OCEAN_WAVES -> "Suara ombak untuk menemani waktu istirahat"
 }

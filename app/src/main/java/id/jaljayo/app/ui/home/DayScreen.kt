@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,7 +24,6 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,6 +41,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -48,6 +50,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import id.jaljayo.app.data.DailyCard
+import id.jaljayo.app.ui.theme.JalJayoSpace
 import id.jaljayo.core.SleepSchedule
 import kotlinx.coroutines.delay
 
@@ -57,7 +60,7 @@ import kotlinx.coroutines.delay
  * Menampilkan:
  * - Sapaan daylight & ringkasan ritme sirkadian hari ini.
  * - Kartu edukasi kebiasaan harian dari ContentRepository (hari ke-N sejak instalasi).
- * - Indikator status "Sudah dibaca" dan tombol tandai selesai.
+ * - Status baca kartu harian.
  * - Tombol akses ke pengaturan dan pemutar relaksasi.
  */
 @Composable
@@ -68,7 +71,9 @@ fun DayScreen(
     onMarkCardDone: () -> Unit,
     onOpenPlayerClick: () -> Unit,
     onOpenSettingsClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isNotificationPermissionGranted: Boolean = true,
+    onOpenNotificationSettings: () -> Unit = {}
 ) {
     val scrollState = rememberScrollState()
 
@@ -76,11 +81,11 @@ fun DayScreen(
         modifier = modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
-            .padding(horizontal = 24.dp)
+            .padding(horizontal = JalJayoSpace.large)
             .verticalScroll(scrollState),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.height(28.dp))
+        Spacer(modifier = Modifier.height(JalJayoSpace.large))
 
         // === Header ===
         Row(
@@ -88,80 +93,49 @@ fun DayScreen(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Column {
+            Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = "☀️ JalJayo",
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.primary,
-                    letterSpacing = 1.sp
+                    text = "JalJayo",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Text(
-                    text = "Ritme Siang Hari",
-                    style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.SemiBold),
+                    text = "Satu langkah kecil\nuntuk malam tenang.",
+                    style = MaterialTheme.typography.headlineSmall,
                     color = MaterialTheme.colorScheme.onBackground
                 )
             }
-            TextButton(onClick = onOpenSettingsClick) {
+            OutlinedButton(
+                onClick = onOpenSettingsClick,
+                modifier = Modifier.height(JalJayoSpace.touchTarget),
+                shape = CircleShape
+            ) {
                 Text(
-                    text = "⚙️ Atur",
-                    style = MaterialTheme.typography.bodyMedium,
+                    text = "Pengaturan",
+                    style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.primary
                 )
             }
         }
-        Spacer(modifier = Modifier.height(4.dp))
-        Text(
-            text = "Bangun kebiasaan tidur teratur mulai dari aktivitas siang harimu.",
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            textAlign = TextAlign.Start,
-            modifier = Modifier.fillMaxWidth()
-        )
+        Spacer(modifier = Modifier.height(JalJayoSpace.medium))
 
-        Spacer(modifier = Modifier.height(24.dp))
-
-        // === Kartu Jadwal Sirkadian ===
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-        ) {
-            Column(modifier = Modifier.padding(20.dp)) {
-                Text(
-                    text = "JADWAL SIRKADIAN HARI INI",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.primary,
-                    letterSpacing = 1.sp
-                )
-                Spacer(modifier = Modifier.height(14.dp))
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    ScheduleItem(icon = "⏰", title = "Jam Bangun", time = sleepSchedule.wakeTime.toString())
-                    ScheduleItem(icon = "🔔", title = "Pengingat Tidur", time = sleepSchedule.anchorTime.toString())
-                    ScheduleItem(icon = "🛏️", title = "Jam Tidur", time = sleepSchedule.bedtime.toString())
-                }
-
-                Spacer(modifier = Modifier.height(16.dp))
-                HorizontalDivider(color = MaterialTheme.colorScheme.surfaceVariant)
-                Spacer(modifier = Modifier.height(12.dp))
-
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(text = "🔒", fontSize = 16.sp)
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = "Night Lockout aktif otomatis pukul 20:00",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            }
+        // Banner peringatan jika izin notifikasi nonaktif (Android 13+)
+        if (!isNotificationPermissionGranted) {
+            NotificationPermissionBanner(
+                onOpenSettingsClick = onOpenNotificationSettings
+            )
+            Spacer(modifier = Modifier.height(JalJayoSpace.medium))
         }
 
-        Spacer(modifier = Modifier.height(20.dp))
+        todayCard?.let { card ->
+            Text(
+                text = "Hari ${card.day.coerceAtMost(14)} dari 14",
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+        }
+
+        Spacer(modifier = Modifier.height(JalJayoSpace.medium))
 
         // === Kartu Edukasi Harian (dari JSON) ===
         if (todayCard != null) {
@@ -174,11 +148,11 @@ fun DayScreen(
             // Fallback kalau JSON gagal terbaca
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(16.dp),
+                shape = MaterialTheme.shapes.medium,
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+                elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
             ) {
-                Column(modifier = Modifier.padding(20.dp)) {
+                Column(modifier = Modifier.padding(JalJayoSpace.medium)) {
                     Text(
                         text = "Konten kartu sedang dimuat...",
                         style = MaterialTheme.typography.bodyMedium,
@@ -188,23 +162,62 @@ fun DayScreen(
             }
         }
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(JalJayoSpace.medium))
+        SleepScheduleCard(schedule = sleepSchedule)
+
+        Spacer(modifier = Modifier.height(JalJayoSpace.large))
 
         // === Tombol Buka Pemutar Relaksasi ===
         OutlinedButton(
             onClick = onOpenPlayerClick,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(52.dp),
-            shape = RoundedCornerShape(12.dp)
+                .height(JalJayoSpace.touchTarget),
+            shape = RoundedCornerShape(50)
         ) {
             Text(
-                text = "🎧 Buka Pemutar Audio Relaksasi",
-                style = MaterialTheme.typography.titleSmall
+                text = "Buka pemutar relaksasi",
+                style = MaterialTheme.typography.titleMedium
             )
         }
 
-        Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.height(JalJayoSpace.xLarge))
+    }
+}
+@Composable
+private fun SleepScheduleCard(schedule: SleepSchedule) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = MaterialTheme.shapes.medium,
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
+    ) {
+        Column(modifier = Modifier.padding(JalJayoSpace.medium)) {
+            Text(
+                text = "Jadwal tidurmu",
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+            Spacer(modifier = Modifier.height(JalJayoSpace.small))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                ScheduleItem(title = "Bangun", time = schedule.wakeTime.toString())
+                ScheduleItem(title = "Pengingat", time = schedule.anchorTime.toString())
+                ScheduleItem(title = "Tidur", time = schedule.bedtime.toString())
+            }
+
+            Spacer(modifier = Modifier.height(JalJayoSpace.small))
+            HorizontalDivider(color = MaterialTheme.colorScheme.outline)
+            Spacer(modifier = Modifier.height(JalJayoSpace.small))
+            Text(
+                text = "Mode malam dimulai pukul 20.00",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
     }
 }
 
@@ -218,7 +231,7 @@ private fun DailyCardSection(
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp),
+        shape = MaterialTheme.shapes.large,
         colors = CardDefaults.cardColors(
             containerColor = if (isCompleted)
                 MaterialTheme.colorScheme.surfaceVariant
@@ -227,7 +240,7 @@ private fun DailyCardSection(
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
-        Column(modifier = Modifier.padding(20.dp)) {
+        Column(modifier = Modifier.padding(JalJayoSpace.medium)) {
             // Label hari ke-N
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -235,21 +248,20 @@ private fun DailyCardSection(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "HARI KE-${card.day} • AKSI HARIAN",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.primary,
-                    letterSpacing = 1.sp
+                    text = "KARTU HARI INI",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.primary
                 )
                 if (isCompleted) {
                     Text(
-                        text = "✅ Selesai",
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.primary
+                        text = "Sudah dibaca",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 } else {
                     Text(
-                        text = "1 menit baca",
-                        style = MaterialTheme.typography.labelSmall,
+                        text = "Belum dibaca",
+                        style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
@@ -257,25 +269,19 @@ private fun DailyCardSection(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Emoji + Judul
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(text = card.emoji, fontSize = 28.sp)
-                Spacer(modifier = Modifier.width(12.dp))
-                Text(
-                    text = card.title,
-                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-            }
+            Text(
+                text = card.title,
+                style = MaterialTheme.typography.headlineSmall,
+                color = MaterialTheme.colorScheme.onBackground
+            )
 
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(JalJayoSpace.small))
 
             // Body teks
             Text(
                 text = card.body,
-                style = MaterialTheme.typography.bodyMedium,
+                style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                lineHeight = 22.sp
             )
 
             Spacer(modifier = Modifier.height(14.dp))
@@ -286,50 +292,48 @@ private fun DailyCardSection(
                 onClick = { showVideoPlayer = true }
             )
 
-            Spacer(modifier = Modifier.height(14.dp))
-            HorizontalDivider(color = MaterialTheme.colorScheme.surfaceVariant)
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(JalJayoSpace.medium))
+            HorizontalDivider(color = MaterialTheme.colorScheme.outline)
+            Spacer(modifier = Modifier.height(JalJayoSpace.medium))
 
             // Kotak aksi konkret
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(10.dp),
+                shape = MaterialTheme.shapes.small,
                 colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f)
+                    containerColor = MaterialTheme.colorScheme.secondaryContainer
                 )
             ) {
-                Row(modifier = Modifier.padding(12.dp)) {
-                    Text(text = "💡", fontSize = 16.sp)
-                    Spacer(modifier = Modifier.width(8.dp))
+                Row(modifier = Modifier.padding(JalJayoSpace.medium)) {
                     Column {
                         Text(
-                            text = "AKSI HARI INI",
-                            style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.primary,
-                            letterSpacing = 0.8.sp
+                            text = "Hari ini coba:",
+                            style = MaterialTheme.typography.labelMedium,
+                            color = MaterialTheme.colorScheme.onSecondaryContainer
                         )
-                        Spacer(modifier = Modifier.height(4.dp))
+                        Spacer(modifier = Modifier.height(JalJayoSpace.xSmall))
                         Text(
                             text = card.action,
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onBackground,
-                            lineHeight = 18.sp
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSecondaryContainer
                         )
                     }
                 }
             }
 
-            // Tombol tandai selesai (hanya jika belum selesai)
+            // Tampilkan aksi baca hanya sebelum kartu ditandai.
             if (!isCompleted) {
-                Spacer(modifier = Modifier.height(14.dp))
+                Spacer(modifier = Modifier.height(JalJayoSpace.medium))
                 Button(
                     onClick = onMarkDone,
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(10.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(JalJayoSpace.touchTarget),
+                    shape = RoundedCornerShape(50)
                 ) {
                     Text(
-                        text = "✓ Tandai Sudah Dibaca",
-                        style = MaterialTheme.typography.titleSmall
+                        text = "Tandai sudah dibaca",
+                        style = MaterialTheme.typography.titleMedium
                     )
                 }
             }
@@ -359,77 +363,58 @@ private fun VerticalVideoThumbnailCard(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(150.dp)
-            .clickable(onClick = onClick),
-        shape = RoundedCornerShape(14.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.Transparent)
+            .clickable(onClick = onClick)
+            .semantics { contentDescription = "Putar video edukasi: ${card.title}" },
+        shape = MaterialTheme.shapes.medium,
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(
-                    Brush.verticalGradient(
-                        listOf(
-                            Color(0xFF1E293B),
-                            Color(0xFF0F172A)
-                        )
-                    )
-                )
-                .padding(16.dp)
+        Row(
+            modifier = Modifier.padding(JalJayoSpace.small),
+            horizontalArrangement = Arrangement.spacedBy(JalJayoSpace.medium),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            // Badge Atas
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Box(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(6.dp))
-                        .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.25f))
-                        .padding(horizontal = 8.dp, vertical = 4.dp)
-                ) {
-                    Text(
-                        text = "🎬 VIDEO VERTIKAL",
-                        style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                }
-                Text(
-                    text = "⏱️ 0:35",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = Color.White.copy(alpha = 0.85f)
-                )
-            }
-
-            // Tombol Play Tengah
             Box(
                 modifier = Modifier
-                    .size(46.dp)
-                    .clip(CircleShape)
-                    .background(Color.White.copy(alpha = 0.2f))
-                    .align(Alignment.Center),
+                    .width(104.dp)
+                    .aspectRatio(9f / 16f)
+                    .clip(MaterialTheme.shapes.small)
+                    .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.12f)),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "▶",
-                    fontSize = 18.sp,
-                    color = Color.White,
-                    modifier = Modifier.padding(start = 3.dp)
+                    text = card.emoji,
+                    style = MaterialTheme.typography.displaySmall,
+                    color = MaterialTheme.colorScheme.primary
                 )
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(JalJayoSpace.xSmall)
+                        .size(32.dp)
+                        .clip(CircleShape)
+                        .background(MaterialTheme.colorScheme.primary),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text("▶", color = MaterialTheme.colorScheme.onPrimary)
+                }
             }
-
-            // Judul Bawah
-            Column(modifier = Modifier.align(Alignment.BottomStart)) {
+            Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = "Tonton Edukasi: ${card.title}",
-                    style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
-                    color = Color.White
+                    text = "VIDEO • 0:35",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.primary
                 )
+                Spacer(modifier = Modifier.height(JalJayoSpace.small))
                 Text(
-                    text = "Ketuk untuk memutar video mikro sains tidur 35 detik",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = Color.White.copy(alpha = 0.7f)
+                    text = card.title,
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Spacer(modifier = Modifier.height(JalJayoSpace.small))
+                Text(
+                    text = "Ketuk untuk menonton",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }
@@ -543,7 +528,7 @@ private fun VerticalVideoModalPlayer(
                                 .padding(horizontal = 12.dp, vertical = 6.dp)
                         ) {
                             Text(
-                                text = if (elapsedSeconds >= totalSeconds) "✅ Video Selesai" else "🎬 Memutar Video Sirkadian...",
+                                text = if (elapsedSeconds >= totalSeconds) "Video selesai" else "Memutar video edukasi",
                                 style = MaterialTheme.typography.labelSmall,
                                 color = MaterialTheme.colorScheme.primary
                             )
@@ -614,7 +599,7 @@ private fun VerticalVideoModalPlayer(
                         modifier = Modifier.weight(1.3f),
                         shape = RoundedCornerShape(12.dp)
                     ) {
-                        Text(text = "✓ Tandai Selesai")
+                        Text(text = "Tandai sudah dibaca")
                     }
                 }
             }
@@ -623,20 +608,73 @@ private fun VerticalVideoModalPlayer(
 }
 
 @Composable
-private fun ScheduleItem(icon: String, title: String, time: String) {
+private fun ScheduleItem(title: String, time: String) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(text = icon, fontSize = 20.sp)
         Spacer(modifier = Modifier.height(4.dp))
         Text(
             text = title,
-            style = MaterialTheme.typography.labelSmall,
+            style = MaterialTheme.typography.labelMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
         Spacer(modifier = Modifier.height(2.dp))
         Text(
             text = time,
-            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+            style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.onBackground
         )
+    }
+}
+
+@Composable
+private fun NotificationPermissionBanner(
+    onOpenSettingsClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Card(
+        modifier = modifier.fillMaxWidth(),
+        shape = MaterialTheme.shapes.medium,
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.secondaryContainer
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(JalJayoSpace.medium),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(
+                    text = "Izin notifikasi nonaktif",
+                    style = MaterialTheme.typography.titleSmall,
+                    color = MaterialTheme.colorScheme.onSecondaryContainer,
+                    fontWeight = FontWeight.SemiBold
+                )
+                Spacer(modifier = Modifier.height(2.dp))
+                Text(
+                    text = "Aktifkan notifikasi agar pengingat jadwal tidur bisa muncul.",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSecondaryContainer
+                )
+            }
+            Spacer(modifier = Modifier.width(JalJayoSpace.small))
+            Button(
+                onClick = onOpenSettingsClick,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
+                ),
+                shape = RoundedCornerShape(50)
+            ) {
+                Text(
+                    text = "Aktifkan",
+                    style = MaterialTheme.typography.labelMedium
+                )
+            }
+        }
     }
 }
