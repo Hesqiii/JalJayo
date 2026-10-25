@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Wireframe Lo-Fi Lengkap JalJayo (PRD v2.2 Sync)</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 24px;
+      background: #020617;
+      color: #F8FAFC;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      text-align: center;
+    }
+    h1 { margin: 0 0 6px; font-size: 26px; }
+    p { margin: 0 0 16px; color: #94A3B8; font-size: 14px; }
+    .badge {
+      display: inline-block;
+      background: #2563EB;
+      color: white;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      letter-spacing: 0.5px;
+    }
+    .svg-container {
+      max-width: 100%;
+      overflow-x: auto;
+      background: #0B1120;
+      border-radius: 16px;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.7);
+      padding: 24px;
+      border: 1px solid #1E293B;
+    }
+  </style>
+</head>
+<body>
+  <div class="badge">FIGMA-READY 8-SCREEN LO-FI WIREFRAME (PRD v2.3)</div>
+  <h1>JalJayo (Good Sleep, Habits) — Wireframe Alur Sistem Terpadu</h1>
+  <p>Mencakup 8 Layar Alur Sistem: Smart Setup Dinamis, Spotlight &amp; Katalog Bab CBT-I, Night Lockout, Zero-Visual Audio, Mute Toast, Setelan Lokal, serta Gamifikasi Streak &amp; Guided Walkthrough.</p>
+  <div class="svg-container">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3420 1150" width="3420" height="1150" style="background:#0F172A; font-family:'Inter', -apple-system, BlinkMacSystemFont, Arial, sans-serif;">
+  <defs>
+    <filter id="card-shadow" x="-5%" y="-2%" width="110%" height="106%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#000000" flood-opacity="0.35" />
+    </filter>
+  </defs>
+
+  <!-- ARTBOARD HEADER -->
+  <text x="60" y="55" font-size="26" font-weight="800" fill="#F8FAFC" letter-spacing="-0.5">JalJayo (Good Sleep, Habits) — Wireframe Alur Sistem Terpadu (PRD v2.2)</text>
+  <text x="60" y="82" font-size="14" fill="#94A3B8">Arsitektur 8 Layar Lengkap: Smart Setup Dinamis, Spotlight &amp; Katalog Bab CBT-I, Night Lockout, Zero-Visual Audio, Mute Toast, Setelan Lokal, &amp; Gamifikasi Streak Duolingo</text>
+
+  <!-- ========================================================================= -->
+  <!-- SCREEN 1: SMART DIAGNOSTIC ONBOARDING (x: 60, y: 120, w: 375, h: 812) -->
+  <!-- ========================================================================= -->
+  <g transform="translate(60, 120)" filter="url(#card-shadow)">
+    <rect width="375" height="812" rx="32" fill="#FFFFFF" stroke="#334155" stroke-width="2"/>
+    <!-- Status Bar -->
+    <text x="30" y="32" font-size="12" font-weight="600" fill="#0F172A">09:41</text>
+    <circle cx="325" cy="28" r="3" fill="#0F172A"/><circle cx="333" cy="28" r="3" fill="#0F172A"/>
+    <rect x="341" y="22" width="18" height="11" rx="2" fill="none" stroke="#0F172A" stroke-width="1.5"/>
+
+    <!-- App Header -->
+    <text x="30" y="66" font-size="12" font-weight="800" fill="#2563EB" letter-spacing="1">JALJAYO • SETUP</text>
+    <rect x="30" y="76" width="50" height="4" rx="2" fill="#2563EB"/>
+    <rect x="84" y="76" width="30" height="4" rx="2" fill="#E2E8F0"/>
+
+    <text x="30" y="108" font-size="18" font-weight="800" fill="#0F172A">Konfigurasi Tidur Cerdas</text>
+    <text x="30" y="126" font-size="11" fill="#64748B">Personalisasi 30 detik untuk kebiasaan tidur ideal.</text>
+
+    <!-- Field 0: Nama Panggilan (Opsional) -->
+    <text x="30" y="156" font-size="11.5" font-weight="700" fill="#1E293B">Panggilan Anda (Opsional):</text>
+    <rect x="30" y="166" width="315" height="40" rx="8" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1.5"/>
+    <text x="44" y="191" font-size="12" font-weight="600" fill="#0F172A">Dimas</text>
+    <line x1="84" y1="178" x2="84" y2="194" stroke="#2563EB" stroke-width="1.5"/>
+
+    <!-- Field 1: Keluhan Utama -->
+    <text x="30" y="228" font-size="11.5" font-weight="700" fill="#1E293B">1. Apa keluhan utama tidur Anda?</text>
+    <!-- Option A (Selected) -->
+    <rect x="30" y="240" width="315" height="56" rx="10" fill="#EFF6FF" stroke="#3B82F6" stroke-width="2"/>
+    <circle cx="52" cy="268" r="13" fill="#DBEAFE"/>
+    <text x="48" y="272" font-size="11">⚡</text>
+    <text x="74" y="261" font-size="12" font-weight="700" fill="#1E3A8A">Otak Muter &amp; Overthinking</text>
+    <text x="74" y="278" font-size="10" fill="#3B82F6">Auto-preset: Theta Waves 6Hz</text>
+
+    <!-- Option B -->
+    <rect x="30" y="304" width="315" height="50" rx="10" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1.5"/>
+    <circle cx="52" cy="329" r="13" fill="#F1F5F9"/>
+    <text x="48" y="333" font-size="11">🔊</text>
+    <text x="74" y="324" font-size="12" font-weight="600" fill="#475569">Kamar Bising / Kos Gelisah</text>
+    <text x="74" y="340" font-size="10" fill="#94A3B8">Auto-preset: Brown Noise</text>
+
+    <!-- Field 2: Target Durasi Tidur -->
+    <text x="30" y="378" font-size="11.5" font-weight="700" fill="#1E293B">2. Kebutuhan durasi tidur harian:</text>
+    <g transform="translate(30, 390)">
+      <rect x="0" y="0" width="95" height="34" rx="8" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1"/>
+      <text x="24" y="21" font-size="11" font-weight="600" fill="#64748B">7 Jam</text>
+      <rect x="110" y="0" width="95" height="34" rx="8" fill="#EFF6FF" stroke="#3B82F6" stroke-width="2"/>
+      <text x="122" y="16" font-size="11" font-weight="700" fill="#1D4ED8">7.5 Jam</text>
+      <text x="124" y="28" font-size="8.5" fill="#3B82F6">(5 Siklus) ✓</text>
+      <rect x="220" y="0" width="95" height="34" rx="8" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1"/>
+      <text x="244" y="21" font-size="11" font-weight="600" fill="#64748B">8 Jam</text>
+    </g>
+
+    <!-- Field 3: Jam Bangun -->
+    <text x="30" y="448" font-size="11.5" font-weight="700" fill="#1E293B">3. Target jam bangun pagi:</text>
+    <g transform="translate(30, 460)">
+      <rect x="0" y="0" width="95" height="34" rx="8" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1"/>
+      <text x="28" y="22" font-size="11.5" font-weight="600" fill="#64748B">05:00</text>
+      <rect x="110" y="0" width="95" height="34" rx="8" fill="#EFF6FF" stroke="#3B82F6" stroke-width="2"/>
+      <text x="138" y="22" font-size="11.5" font-weight="700" fill="#1D4ED8">06:00</text>
+      <rect x="220" y="0" width="95" height="34" rx="8" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1"/>
+      <text x="248" y="22" font-size="11.5" font-weight="600" fill="#64748B">07:00</text>
+    </g>
+
+    <!-- Calculated Result -->
+    <rect x="30" y="512" width="315" height="50" rx="8" fill="#F0FDF4" stroke="#BBF7D0" stroke-width="1"/>
+    <text x="44" y="532" font-size="11" font-weight="700" fill="#15803D">🔔 Jadwal Sirkadian &amp; Anchor Terhitung:</text>
+    <text x="44" y="548" font-size="10.5" fill="#166534">Tidur: 22.30 • Notif Anchor: 21.45 (Local Offline)</text>
+
+    <!-- Transparency Note -->
+    <rect x="30" y="574" width="315" height="42" rx="8" fill="#FEFCE8" stroke="#FEF08A" stroke-width="1"/>
+    <text x="44" y="594" font-size="10" font-weight="700" fill="#854D0E">ℹ Pengaturan Fleksibel:</text>
+    <text x="44" y="607" font-size="9.5" fill="#A16207">Dapat Anda sesuaikan sewaktu-waktu di menu Pengaturan.</text>
+
+    <!-- CTA -->
+    <rect x="30" y="700" width="315" height="46" rx="14" fill="#2563EB"/>
+    <text x="135" y="728" font-size="13" font-weight="700" fill="#FFFFFF">Mulai JalJayo</text>
+    <text x="115" y="764" font-size="10.5" fill="#94A3B8">Zero-Login • 100% Offline Lokal</text>
+  </g>
+  <text x="120" y="965" font-size="13" font-weight="700" fill="#94A3B8">1. Smart Onboarding (UCS-00)</text>
+
+  <!-- ========================================================================= -->
+  <!-- SCREEN 2: DAYTIME HOME - DAILY SPOTLIGHT (x: 475, y: 120, w: 375, h: 812) -->
+  <!-- ========================================================================= -->
+  <g transform="translate(475, 120)" filter="url(#card-shadow)">
+    <rect width="375" height="812" rx="32" fill="#FFFFFF" stroke="#334155" stroke-width="2"/>
+    <!-- Status Bar -->
+    <text x="30" y="32" font-size="12" font-weight="600" fill="#0F172A">13:15</text>
+    <circle cx="325" cy="28" r="3" fill="#0F172A"/><circle cx="333" cy="28" r="3" fill="#0F172A"/>
+    <rect x="341" y="22" width="18" height="11" rx="2" fill="none" stroke="#0F172A" stroke-width="1.5"/>
+
+    <!-- Greeting Header with User Name & Streak Pill -->
+    <text x="30" y="70" font-size="16" font-weight="800" fill="#0F172A">Halo, Dimas! ☀️</text>
+    <text x="30" y="88" font-size="10.5" fill="#64748B">Mode Siang Aktif (Akses s.d 20.00)</text>
+
+    <!-- Streak Pill Duolingo (🔥 Counter) -->
+    <rect x="198" y="58" width="62" height="24" rx="12" fill="#FFF7ED" stroke="#FDBA74" stroke-width="1.5"/>
+    <text x="206" y="74" font-size="11">🔥</text>
+    <text x="222" y="74" font-size="11" font-weight="800" fill="#EA580C">1 Hari</text>
+
+    <!-- Info Guide Button (Versi 2) -->
+    <circle cx="278" cy="70" r="12" fill="#EFF6FF" stroke="#BFDBFE" stroke-width="1.5"/>
+    <text x="274" y="74" font-size="11" font-weight="800" fill="#2563EB">ℹ</text>
+
+    <!-- Settings Button -->
+    <circle cx="314" cy="70" r="12" fill="#F1F5F9" stroke="#CBD5E1" stroke-width="1.5"/>
+    <text x="309" y="74" font-size="11">⚙</text>
+
+    <!-- Curfew Banner -->
+    <rect x="30" y="105" width="315" height="48" rx="10" fill="#FFFBEB" stroke="#FDE68A" stroke-width="1.5"/>
+    <text x="44" y="125" font-size="11" font-weight="700" fill="#B45309">⏰ Batas Kafein Terakhir: 14.00</text>
+    <text x="44" y="141" font-size="10" fill="#92400E">Tersisa 45 menit sebelum batas kafein harianmu.</text>
+
+    <!-- Main Section: Daily Micro-Card -->
+    <text x="30" y="178" font-size="12.5" font-weight="700" fill="#0F172A">Daily Spotlight Micro-Card #14</text>
+    <rect x="30" y="190" width="315" height="360" rx="14" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1.5"/>
+
+    <!-- Video Box Placeholder (30-45s) -->
+    <rect x="44" y="204" width="287" height="145" rx="10" fill="#1E293B"/>
+    <circle cx="187" cy="276" r="20" fill="#3B82F6"/>
+    <polygon points="183,268 195,276 183,284" fill="#FFFFFF"/>
+    <text x="56" y="225" font-size="9.5" font-weight="700" fill="#94A3B8">VIDEO KILAT (0:38)</text>
+    <text x="56" y="334" font-size="11" font-weight="600" fill="#FFFFFF">Kenapa Kopi Jam 2 Bikin Susah Tidur?</text>
+
+    <!-- Text Takeaway -->
+    <text x="44" y="372" font-size="11" font-weight="700" fill="#0F172A">Intisari Sains Hari Ini:</text>
+    <text x="44" y="390" font-size="10" fill="#475569">• Waktu paruh kafein bertahan 5-7 jam di tubuh.</text>
+    <text x="44" y="406" font-size="10" fill="#475569">• Kopi sore memangkas deep sleep hingga 1 jam.</text>
+    <text x="44" y="422" font-size="9.5" fill="#64748B">(Rujukan: Drake et al., 2013)</text>
+
+    <!-- Action Check -->
+    <rect x="44" y="445" width="287" height="34" rx="8" fill="#2563EB"/>
+    <text x="110" y="467" font-size="11" font-weight="700" fill="#FFFFFF">✓ Tandai Paham &amp; Terapkan</text>
+
+    <!-- Link to Catalog -->
+    <rect x="30" y="565" width="315" height="48" rx="12" fill="#EFF6FF" stroke="#BFDBFE" stroke-width="1.5"/>
+    <text x="44" y="586" font-size="11.5" font-weight="700" fill="#1D4ED8">📚 Buka Katalog Bab Edukasi CBT-I</text>
+    <text x="44" y="602" font-size="10" fill="#3B82F6">Eksplorasi topik kafein, layar, stres &amp; kamar ➔</text>
+
+    <!-- Bottom Nav Bar -->
+    <line x1="30" y1="740" x2="345" y2="740" stroke="#E2E8F0" stroke-width="1"/>
+    <g transform="translate(30, 752)">
+      <text x="30" y="20" font-size="11" font-weight="700" fill="#2563EB">☀️ Siang</text>
+      <text x="135" y="20" font-size="11" font-weight="500" fill="#94A3B8">🌙 Malam</text>
+      <text x="235" y="20" font-size="11" font-weight="500" fill="#94A3B8">⚙ Setelan</text>
+    </g>
+  </g>
+  <text x="545" y="965" font-size="13" font-weight="700" fill="#94A3B8">2. Beranda Siang (UCS-02)</text>
+
+  <!-- ========================================================================= -->
+  <!-- SCREEN 3: DAYTIME - KATALOG BAB EDUKASI CBT-I (x: 890, y: 120, w: 375, h: 812) -->
+  <!-- ========================================================================= -->
+  <g transform="translate(890, 120)" filter="url(#card-shadow)">
+    <rect width="375" height="812" rx="32" fill="#FFFFFF" stroke="#334155" stroke-width="2"/>
+    <!-- Status Bar -->
+    <text x="30" y="32" font-size="12" font-weight="600" fill="#0F172A">13:20</text>
+    <circle cx="325" cy="28" r="3" fill="#0F172A"/><circle cx="333" cy="28" r="3" fill="#0F172A"/>
+    <rect x="341" y="22" width="18" height="11" rx="2" fill="none" stroke="#0F172A" stroke-width="1.5"/>
+
+    <!-- Header -->
+    <text x="30" y="70" font-size="17" font-weight="800" fill="#0F172A">Katalog Edukasi CBT-I 📚</text>
+    <text x="30" y="88" font-size="11" fill="#64748B">Modul Sains Kebiasaan Tidur (Akses Siang)</text>
+
+    <!-- Category 1: Kafein & Nutrisi -->
+    <rect x="30" y="115" width="315" height="74" rx="12" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1.5"/>
+    <circle cx="54" cy="152" r="16" fill="#FEF3C7"/>
+    <text x="48" y="157" font-size="13">☕</text>
+    <text x="80" y="143" font-size="12" font-weight="700" fill="#0F172A">Bab 1: Regulasi Kafein &amp; Nutrisi</text>
+    <text x="80" y="159" font-size="10" fill="#64748B">3 Kartu • Batas jam 14.00, adenosin, hidrasi</text>
+    <text x="80" y="174" font-size="9.5" font-weight="600" fill="#D97706">Status: 2/3 Selesai Dibaca</text>
+    <text x="320" y="156" font-size="12" fill="#94A3B8">&gt;</text>
+
+    <!-- Category 2: Paparan Layar & Cahaya -->
+    <rect x="30" y="200" width="315" height="74" rx="12" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1.5"/>
+    <circle cx="54" cy="237" r="16" fill="#DBEAFE"/>
+    <text x="48" y="242" font-size="13">📱</text>
+    <text x="80" y="228" font-size="12" font-weight="700" fill="#0F172A">Bab 2: Manajemen Cahaya &amp; Gawai</text>
+    <text x="80" y="244" font-size="10" fill="#64748B">4 Kartu • Supresi melatonin, aturan 60 mnt</text>
+    <text x="80" y="259" font-size="9.5" font-weight="600" fill="#2563EB">Status: 4/4 Selesai Dibaca</text>
+    <text x="320" y="241" font-size="12" fill="#94A3B8">&gt;</text>
+
+    <!-- Category 3: Relaksasi & Overthinking -->
+    <rect x="30" y="285" width="315" height="74" rx="12" fill="#EFF6FF" stroke="#3B82F6" stroke-width="2"/>
+    <circle cx="54" cy="322" r="16" fill="#DBEAFE"/>
+    <text x="48" y="327" font-size="13">🧠</text>
+    <text x="80" y="313" font-size="12" font-weight="700" fill="#1E3A8A">Bab 3: Dekompresi Pikiran &amp; Cemas</text>
+    <text x="80" y="329" font-size="10" fill="#3B82F6">3 Kartu • Aturan 20 menit, dekompresi cemas</text>
+    <text x="80" y="344" font-size="9.5" font-weight="700" fill="#1D4ED8">Topik Rekomendasi Sesuai Keluhan Anda</text>
+    <text x="320" y="326" font-size="12" fill="#3B82F6">&gt;</text>
+
+    <!-- Category 4: Stimulus Control Kasur -->
+    <rect x="30" y="370" width="315" height="74" rx="12" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1.5"/>
+    <circle cx="54" cy="407" r="16" fill="#F3E8FF"/>
+    <text x="48" y="412" font-size="13">🛏️</text>
+    <text x="80" y="398" font-size="12" font-weight="700" fill="#0F172A">Bab 4: Penataan Kamar &amp; Suhu</text>
+    <text x="80" y="414" font-size="10" fill="#64748B">2 Kartu • Suhu ideal 18-20°C, kasur hanya tidur</text>
+    <text x="80" y="429" font-size="9.5" font-weight="600" fill="#64748B">Status: 0/2 Selesai Dibaca</text>
+    <text x="320" y="411" font-size="12" fill="#94A3B8">&gt;</text>
+
+    <!-- Info Box -->
+    <rect x="30" y="465" width="315" height="52" rx="10" fill="#F0FDF4" stroke="#BBF7D0" stroke-width="1"/>
+    <text x="44" y="487" font-size="10.5" font-weight="700" fill="#15803D">💡 Prinsip CBT-I (Morin et al., 2006):</text>
+    <text x="44" y="503" font-size="10" fill="#166534">Pelajari di siang hari, terapkan otomatis di malam hari.</text>
+
+    <!-- Bottom Nav Bar -->
+    <line x1="30" y1="740" x2="345" y2="740" stroke="#E2E8F0" stroke-width="1"/>
+    <g transform="translate(30, 752)">
+      <text x="30" y="20" font-size="11" font-weight="700" fill="#2563EB">☀️ Siang</text>
+      <text x="135" y="20" font-size="11" font-weight="500" fill="#94A3B8">🌙 Malam</text>
+      <text x="235" y="20" font-size="11" font-weight="500" fill="#94A3B8">⚙ Setelan</text>
+    </g>
+  </g>
+  <text x="960" y="965" font-size="13" font-weight="700" fill="#94A3B8">3. Katalog Bab CBT-I (UCS-02.Alt-2)</text>
+
+  <!-- ========================================================================= -->
+  <!-- SCREEN 4: EXCEPTION STATE - NIGHT LOCKOUT (x: 1305, y: 120, w: 375, h: 812) -->
+  <!-- ========================================================================= -->
+  <g transform="translate(1305, 120)" filter="url(#card-shadow)">
+    <rect width="375" height="812" rx="32" fill="#0A0F1D" stroke="#1E293B" stroke-width="2"/>
+    <!-- Status Bar -->
+    <text x="30" y="32" font-size="12" font-weight="600" fill="#94A3B8">20:45</text>
+    <circle cx="325" cy="28" r="3" fill="#94A3B8"/><circle cx="333" cy="28" r="3" fill="#94A3B8"/>
+    <rect x="341" y="22" width="18" height="11" rx="2" fill="none" stroke="#94A3B8" stroke-width="1.5"/>
+
+    <!-- Lockout Dialog Overlay -->
+    <rect x="25" y="160" width="325" height="380" rx="20" fill="#0F172A" stroke="#334155" stroke-width="1.5"/>
+    <circle cx="187" cy="235" r="36" fill="#1E293B"/>
+    <text x="173" y="247" font-size="28">🔒</text>
+    <text x="95" y="305" font-size="16" font-weight="800" fill="#F8FAFC">Mode Malam Aktif</text>
+    <text x="105" y="328" font-size="12" font-weight="600" fill="#60A5FA">Night Lockout (Pasca 20.00)</text>
+
+    <text x="45" y="365" font-size="11.5" fill="#94A3B8" text-anchor="start">
+      <tspan x="45" dy="0">Akses video edukasi diistirahatkan</tspan>
+      <tspan x="45" dy="18">untuk melindungi produksi hormon</tspan>
+      <tspan x="45" dy="18">melatonin dari paparan cahaya layar.</tspan>
+      <tspan x="45" dy="24" font-style="italic" fill="#64748B">(Prinsip Fotobiologi: Chang et al., 2015)</tspan>
+    </text>
+
+    <!-- Forward CTA to Wind-Down -->
+    <rect x="45" y="465" width="285" height="46" rx="12" fill="#2563EB"/>
+    <text x="95" y="493" font-size="12.5" font-weight="700" fill="#FFFFFF">Masuk ke Mode Audio Malam ➔</text>
+  </g>
+  <text x="1380" y="965" font-size="13" font-weight="700" fill="#F59E0B">4. Exception: Night Lockout (UCS-02.Exc-1)</text>
+
+  <!-- ========================================================================= -->
+  <!-- SCREEN 5: NIGHT WIND-DOWN PLAYER (x: 1720, y: 120, w: 375, h: 812) -->
+  <!-- ========================================================================= -->
+  <g transform="translate(1720, 120)" filter="url(#card-shadow)">
+    <rect width="375" height="812" rx="32" fill="#0A0F1D" stroke="#1E293B" stroke-width="2"/>
+    <!-- Status Bar -->
+    <text x="30" y="32" font-size="12" font-weight="600" fill="#94A3B8">22:15</text>
+    <circle cx="325" cy="28" r="3" fill="#94A3B8"/><circle cx="333" cy="28" r="3" fill="#94A3B8"/>
+    <rect x="341" y="22" width="18" height="11" rx="2" fill="none" stroke="#94A3B8" stroke-width="1.5"/>
+
+    <!-- Header -->
+    <text x="30" y="70" font-size="17" font-weight="800" fill="#F8FAFC">Mode Istirahat Malam 🌙</text>
+    <text x="30" y="90" font-size="11" fill="#64748B">Zero-Visual Mode: Layar padam total saat diputar</text>
+
+    <!-- Visual Disc / Wave Center -->
+    <circle cx="187" cy="215" r="75" fill="#0F172A" stroke="#1E293B" stroke-width="2"/>
+    <circle cx="187" cy="215" r="50" fill="#1E293B" stroke="#3B82F6" stroke-width="1.5"/>
+    <circle cx="187" cy="215" r="22" fill="#3B82F6"/>
+    <text x="135" y="320" font-size="14.5" font-weight="700" fill="#F8FAFC">Theta Waves 6Hz</text>
+    <text x="120" y="338" font-size="11" fill="#60A5FA">Penenang Pikiran Berputar</text>
+
+    <!-- Sound Selectors -->
+    <text x="30" y="380" font-size="11.5" font-weight="600" fill="#94A3B8">Pilih Frekuensi:</text>
+    <g transform="translate(30, 392)">
+      <rect x="0" y="0" width="100" height="34" rx="8" fill="#1E3A8A" stroke="#3B82F6" stroke-width="1.5"/>
+      <text x="16" y="22" font-size="10.5" font-weight="700" fill="#FFFFFF">Theta 6Hz</text>
+      <rect x="108" y="0" width="100" height="34" rx="8" fill="#1E293B" stroke="#334155" stroke-width="1"/>
+      <text x="120" y="22" font-size="10.5" fill="#94A3B8">Brown Noise</text>
+      <rect x="216" y="0" width="99" height="34" rx="8" fill="#1E293B" stroke="#334155" stroke-width="1"/>
+      <text x="238" y="22" font-size="10.5" fill="#94A3B8">Hujan</text>
+    </g>
+
+    <!-- Timer Selector -->
+    <text x="30" y="458" font-size="11.5" font-weight="600" fill="#94A3B8">Auto-Stop Timer (Fade-Out Otomatis):</text>
+    <g transform="translate(30, 470)">
+      <rect x="0" y="0" width="100" height="34" rx="8" fill="#1E293B" stroke="#334155" stroke-width="1"/>
+      <text x="26" y="22" font-size="10.5" fill="#94A3B8">15 Menit</text>
+      <rect x="108" y="0" width="100" height="34" rx="8" fill="#1E3A8A" stroke="#3B82F6" stroke-width="1.5"/>
+      <text x="134" y="22" font-size="10.5" font-weight="700" fill="#FFFFFF">30 Menit</text>
+      <rect x="216" y="0" width="99" height="34" rx="8" fill="#1E293B" stroke="#334155" stroke-width="1"/>
+      <text x="242" y="22" font-size="10.5" fill="#94A3B8">45 Menit</text>
+    </g>
+
+    <!-- Massive Play & Lock Button -->
+    <rect x="30" y="540" width="315" height="52" rx="14" fill="#2563EB"/>
+    <text x="105" y="572" font-size="14" font-weight="700" fill="#FFFFFF">▶ Putar &amp; Kunci Layar</text>
+    <text x="75" y="615" font-size="10.5" fill="#64748B">Layar langsung padam total saat tombol ditekan.</text>
+
+    <!-- Nav Bar -->
+    <line x1="30" y1="740" x2="345" y2="740" stroke="#1E293B" stroke-width="1"/>
+    <g transform="translate(30, 752)">
+      <text x="30" y="20" font-size="11" font-weight="500" fill="#64748B">☀️ Siang</text>
+      <text x="135" y="20" font-size="11" font-weight="700" fill="#60A5FA">🌙 Malam</text>
+      <text x="235" y="20" font-size="11" font-weight="500" fill="#64748B">⚙ Setelan</text>
+    </g>
+  </g>
+  <text x="1805" y="965" font-size="13" font-weight="700" fill="#94A3B8">5. Beranda Malam (UCS-01)</text>
+
+  <!-- ========================================================================= -->
+  <!-- SCREEN 6: EXCEPTION STATE - VOLUME MUTE TOAST (x: 2135, y: 120, w: 375, h: 812) -->
+  <!-- ========================================================================= -->
+  <g transform="translate(2135, 120)" filter="url(#card-shadow)">
+    <rect width="375" height="812" rx="32" fill="#0A0F1D" stroke="#1E293B" stroke-width="2"/>
+    <!-- Status Bar -->
+    <text x="30" y="32" font-size="12" font-weight="600" fill="#94A3B8">22:16</text>
+    <circle cx="325" cy="28" r="3" fill="#94A3B8"/><circle cx="333" cy="28" r="3" fill="#94A3B8"/>
+    <rect x="341" y="22" width="18" height="11" rx="2" fill="none" stroke="#94A3B8" stroke-width="1.5"/>
+
+    <!-- Dimmed background elements -->
+    <circle cx="187" cy="215" r="75" fill="#0F172A" opacity="0.3"/>
+    
+    <!-- Toast Alert Popup (UCS-01.Exc-1) -->
+    <rect x="25" y="80" width="325" height="68" rx="14" fill="#1E293B" stroke="#F59E0B" stroke-width="1.5"/>
+    <circle cx="50" cy="114" r="14" fill="#FEF3C7"/>
+    <text x="44" y="119" font-size="12">⚠️</text>
+    <text x="74" y="106" font-size="12" font-weight="700" fill="#F8FAFC">Volume Perangkat Hening (0%)</text>
+    <text x="74" y="124" font-size="10.5" fill="#CBD5E1">Harap naikkan volume ponsel agar suara terdengar.</text>
+
+    <!-- Audio Progress Running in Background -->
+    <rect x="30" y="440" width="315" height="120" rx="14" fill="#0F172A" stroke="#334155" stroke-width="1"/>
+    <text x="45" y="470" font-size="12" font-weight="700" fill="#F8FAFC">Sesi Berjalan di Latar Belakang</text>
+    <text x="45" y="490" font-size="10.5" fill="#60A5FA">Timer aktif: 29:45 tersisa (Fade-out di 02:00)</text>
+    <!-- Progress Bar -->
+    <rect x="45" y="510" width="285" height="6" rx="3" fill="#1E293B"/>
+    <rect x="45" y="510" width="20" height="6" rx="3" fill="#3B82F6"/>
+  </g>
+  <text x="2195" y="965" font-size="13" font-weight="700" fill="#F59E0B">6. Exception: Mute Alert (UCS-01.Exc-1)</text>
+
+  <!-- ========================================================================= -->
+  <!-- SCREEN 7: LOCAL SETTINGS & RECONFIGURATION (x: 2550, y: 120, w: 375, h: 812) -->
+  <!-- ========================================================================= -->
+  <g transform="translate(2550, 120)" filter="url(#card-shadow)">
+    <rect width="375" height="812" rx="32" fill="#FFFFFF" stroke="#334155" stroke-width="2"/>
+    <!-- Status Bar -->
+    <text x="30" y="32" font-size="12" font-weight="600" fill="#0F172A">09:41</text>
+    <circle cx="325" cy="28" r="3" fill="#0F172A"/><circle cx="333" cy="28" r="3" fill="#0F172A"/>
+    <rect x="341" y="22" width="18" height="11" rx="2" fill="none" stroke="#0F172A" stroke-width="1.5"/>
+
+    <!-- Header -->
+    <text x="30" y="70" font-size="17" font-weight="800" fill="#0F172A">Pengaturan &amp; Preferensi</text>
+    <text x="30" y="88" font-size="11.5" fill="#64748B">Semua data tersimpan lokal di ponsel</text>
+
+    <!-- Group 1: Profil & Jadwal -->
+    <text x="30" y="122" font-size="11.5" font-weight="700" fill="#2563EB">PROFIL &amp; JADWAL SIRKADIAN</text>
+    <rect x="30" y="132" width="315" height="154" rx="12" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1"/>
+    
+    <text x="44" y="156" font-size="11.5" font-weight="600" fill="#334155">Nama Panggilan</text>
+    <text x="270" y="156" font-size="11.5" font-weight="700" fill="#2563EB">Dimas &gt;</text>
+    <line x1="44" y1="168" x2="330" y2="168" stroke="#E2E8F0" stroke-width="1"/>
+
+    <text x="44" y="190" font-size="11.5" font-weight="600" fill="#334155">Target Durasi Tidur</text>
+    <text x="220" y="190" font-size="11.5" font-weight="700" fill="#2563EB">7.5 Jam (5 Siklus) &gt;</text>
+    <line x1="44" y1="202" x2="330" y2="202" stroke="#E2E8F0" stroke-width="1"/>
+
+    <text x="44" y="224" font-size="11.5" font-weight="600" fill="#334155">Target Bangun Pagi</text>
+    <text x="275" y="224" font-size="11.5" font-weight="700" fill="#2563EB">06:00 &gt;</text>
+    <line x1="44" y1="236" x2="330" y2="236" stroke="#E2E8F0" stroke-width="1"/>
+
+    <text x="44" y="258" font-size="11.5" font-weight="600" fill="#334155">Bedtime Anchor (45 mnt)</text>
+    <rect x="280" y="246" width="36" height="20" rx="10" fill="#2563EB"/>
+    <circle cx="306" cy="256" r="8" fill="#FFFFFF"/>
+
+    <!-- Group 2: Audio -->
+    <text x="30" y="306" font-size="11.5" font-weight="700" fill="#2563EB">PREFERENSI AUDIO DEFAULT</text>
+    <rect x="30" y="316" width="315" height="80" rx="12" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1"/>
+    <text x="44" y="342" font-size="11.5" font-weight="600" fill="#334155">Frekuensi Suara Default</text>
+    <text x="240" y="342" font-size="11" font-weight="600" fill="#64748B">Theta 6Hz &gt;</text>
+    <line x1="44" y1="355" x2="330" y2="355" stroke="#E2E8F0" stroke-width="1"/>
+    <text x="44" y="378" font-size="11.5" font-weight="600" fill="#334155">Durasi Timer Default</text>
+    <text x="255" y="378" font-size="11" font-weight="600" fill="#64748B">30 Menit &gt;</text>
+
+    <!-- Group 3: Privacy -->
+    <text x="30" y="420" font-size="11.5" font-weight="700" fill="#2563EB">PRIVASI &amp; PENYIMPANAN</text>
+    <rect x="30" y="430" width="315" height="68" rx="12" fill="#F0FDF4" stroke="#BBF7D0" stroke-width="1"/>
+    <text x="44" y="452" font-size="11" font-weight="700" fill="#15803D">🔒 100% Offline &amp; Zero-Data Tracking</text>
+    <text x="44" y="470" font-size="10" fill="#166534">Tidak ada transmisi internet; data di localStorage.</text>
+
+    <!-- Reset Action -->
+    <rect x="30" y="520" width="315" height="42" rx="10" fill="#FEE2E2" stroke="#FCA5A5" stroke-width="1"/>
+    <text x="110" y="546" font-size="12" font-weight="700" fill="#B91C1C">Reset ke Konfigurasi Awal</text>
+
+    <!-- Nav Bar -->
+    <line x1="30" y1="740" x2="345" y2="740" stroke="#E2E8F0" stroke-width="1"/>
+    <g transform="translate(30, 752)">
+      <text x="30" y="20" font-size="11" font-weight="500" fill="#94A3B8">☀️ Siang</text>
+      <text x="135" y="20" font-size="11" font-weight="500" fill="#94A3B8">🌙 Malam</text>
+      <text x="235" y="20" font-size="11" font-weight="700" fill="#2563EB">⚙ Setelan</text>
+    </g>
+  </g>
+  <text x="2610" y="965" font-size="13" font-weight="700" fill="#94A3B8">7. Pengaturan Lokal (UCS-03)</text>
+
+
+  <!-- ========================================================================= -->
+  <!-- SCREEN 8: DUOLINGO STREAK CELEBRATION & GUIDED TOUR (x: 2990, y: 120, w: 375, h: 812) -->
+  <!-- ========================================================================= -->
+  <g transform="translate(2990, 120)" filter="url(#card-shadow)">
+    <rect width="375" height="812" rx="32" fill="#0F172A" stroke="#334155" stroke-width="2"/>
+    <!-- Status Bar -->
+    <text x="30" y="32" font-size="12" font-weight="600" fill="#94A3B8">13:30</text>
+    <circle cx="325" cy="28" r="3" fill="#94A3B8"/><circle cx="333" cy="28" r="3" fill="#94A3B8"/>
+    <rect x="341" y="22" width="18" height="11" rx="2" fill="none" stroke="#94A3B8" stroke-width="1.5"/>
+
+    <!-- Header Overlay Label -->
+    <text x="30" y="65" font-size="11.5" font-weight="800" fill="#38BDF8" letter-spacing="1">GAMIFIKASI RETENSI &amp; ONBOARDING TOUR</text>
+    
+    <!-- Modal Card 1: Duolingo Streak Celebration -->
+    <rect x="25" y="85" width="325" height="350" rx="20" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
+    <circle cx="187" cy="135" r="32" fill="#FFEDD5"/>
+    <text x="170" y="146" font-size="32">🔥</text>
+    <text x="187" y="190" font-size="18" font-weight="800" fill="#0F172A" text-anchor="middle">3 Hari Konsisten!</text>
+    <text x="187" y="210" font-size="11" fill="#64748B" text-anchor="middle">Ritme sirkadian Anda semakin selaras dan terbentuk alami.</text>
+
+    <!-- 7-Day Tracker Row (Sen-Min) -->
+    <g transform="translate(40, 230)">
+      <circle cx="15" cy="15" r="13" fill="#EA580C"/><text x="11" y="19" font-size="10" fill="#FFF" font-weight="700">✓</text><text x="15" y="38" font-size="9" fill="#EA580C" text-anchor="middle">Sen</text>
+      <circle cx="55" cy="15" r="13" fill="#EA580C"/><text x="51" y="19" font-size="10" fill="#FFF" font-weight="700">✓</text><text x="55" y="38" font-size="9" fill="#EA580C" text-anchor="middle">Sel</text>
+      <circle cx="95" cy="15" r="13" fill="#EA580C"/><text x="91" y="19" font-size="10" fill="#FFF" font-weight="700">✓</text><text x="95" y="38" font-size="9" fill="#EA580C" text-anchor="middle">Rab</text>
+      <circle cx="135" cy="15" r="13" fill="#F1F5F9"/><text x="135" y="38" font-size="9" fill="#94A3B8" text-anchor="middle">Kam</text>
+      <circle cx="175" cy="15" r="13" fill="#F1F5F9"/><text x="175" y="38" font-size="9" fill="#94A3B8" text-anchor="middle">Jum</text>
+      <circle cx="215" cy="15" r="13" fill="#F1F5F9"/><text x="215" y="38" font-size="9" fill="#94A3B8" text-anchor="middle">Sab</text>
+      <circle cx="255" cy="15" r="13" fill="#F1F5F9"/><text x="255" y="38" font-size="9" fill="#94A3B8" text-anchor="middle">Min</text>
+    </g>
+
+    <!-- Longest Streak Badge -->
+    <rect x="45" y="290" width="285" height="36" rx="10" fill="#FEF3C7"/>
+    <text x="187" y="313" font-size="11" font-weight="700" fill="#B45309" text-anchor="middle">🏆 Rekor Terbaik Anda: 7 Hari Berturut-turut</text>
+
+    <!-- Streak CTA Button -->
+    <rect x="45" y="345" width="285" height="44" rx="12" fill="#EA580C"/>
+    <text x="187" y="372" font-size="12.5" font-weight="700" fill="#FFFFFF" text-anchor="middle">Pertahankan Ritme!</text>
+
+    <!-- Modal Card 2: Guided Interactive Walkthrough (Versi 1) -->
+    <rect x="25" y="460" width="325" height="255" rx="20" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
+    <text x="45" y="488" font-size="10.5" font-weight="800" fill="#2563EB" letter-spacing="0.5">PANDUAN PENGGUNAAN (1/4)</text>
+    <circle cx="325" cy="484" r="10" fill="#F1F5F9"/><text x="322" y="488" font-size="10" fill="#64748B">✕</text>
+
+    <circle cx="70" cy="535" r="22" fill="#EFF6FF"/><text x="58" y="544" font-size="22">☕</text>
+    <text x="105" y="530" font-size="13" font-weight="700" fill="#0F172A">Batas Kafein Sirkadian</text>
+    <text x="105" y="548" font-size="10.5" fill="#64748B">Dihitung otomatis 8 jam sebelum tidur.</text>
+
+    <rect x="45" y="575" width="285" height="60" rx="10" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1"/>
+    <text x="55" y="598" font-size="10" fill="#334155">Menghentikan kafein tepat waktu melindungi</text>
+    <text x="55" y="614" font-size="10" fill="#334155">fase Deep Sleep (NREM Tahap 3) malam ini.</text>
+
+    <rect x="45" y="652" width="285" height="40" rx="12" fill="#2563EB"/>
+    <text x="187" y="677" font-size="12" font-weight="700" fill="#FFFFFF" text-anchor="middle">Lanjutkan Panduan ➔</text>
+
+    <!-- Bottom Nav Bar -->
+    <line x1="30" y1="740" x2="345" y2="740" stroke="#334155" stroke-width="1"/>
+    <g transform="translate(30, 752)">
+      <text x="30" y="20" font-size="11" font-weight="700" fill="#38BDF8">☀️ Siang</text>
+      <text x="135" y="20" font-size="11" font-weight="500" fill="#64748B">🌙 Malam</text>
+      <text x="235" y="20" font-size="11" font-weight="500" fill="#64748B">⚙ Setelan</text>
+    </g>
+  </g>
+  <text x="3030" y="965" font-size="13" font-weight="700" fill="#94A3B8">8. Streak &amp; Guided Tour (UCS-04)</text>
+
+</svg>
+  </div>
+</body>
+</html>

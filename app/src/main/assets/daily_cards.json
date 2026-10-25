@@ -1,35 +1,51 @@
-﻿[
+[
   {
     "id": "card_01",
     "day": 1,
     "title": "Batas Kafein: Aturan 6 Jam",
-    "body": "Kafein punya waktu paruh 5\u20137 jam di tubuh. Artinya, kopi yang kamu minum jam 4 sore masih aktif separuhnya saat jam 11 malam \u2014 otak masih terjaga padahal tubuh lelah. Ini biang keladi susah tidur tanpa sebab jelas.",
+    "body": "Kafein punya waktu paruh 5–7 jam di tubuh. Artinya, kopi yang kamu minum jam 4 sore masih aktif separuhnya saat jam 11 malam — otak masih terjaga padahal tubuh lelah. Ini biang keladi susah tidur tanpa sebab jelas.",
     "action": "Tetapkan jam batas kafein harimu: 6 jam sebelum jam tidur. Pasang pengingat di HP sekarang.",
-    "emoji": "\u2615"
+    "emoji": "☕",
+    "chapterId": 1,
+    "chapterTitle": "Regulasi Kafein & Nutrisi",
+    "speaker": "Vishal Dasani (Certified Sleep Educator)",
+    "videoResName": "video_kafein"
   },
   {
     "id": "card_02",
     "day": 2,
     "title": "Brain Dump: Kosongkan Pikiran ke Kertas",
-    "body": "Overthinking sebelum tidur bukan salah otakmu \u2014 otak memang tugasnya memproses masalah. Cara menghentikannya bukan dipaksa, tapi dikosongkan. Tulis semua yang ada di kepalamu ke kertas sebelum tidur. Otak jadi lega karena tugasnya sudah selesai.",
+    "body": "Overthinking sebelum tidur bukan salah otakmu — otak memang tugasnya memproses masalah. Cara menghentikannya bukan dipaksa, tapi dikosongkan. Tulis semua yang ada di kepalamu ke kertas sebelum tidur. Otak jadi lega karena tugasnya sudah selesai.",
     "action": "Siapkan selembar kertas kecil di samping bantal. Sebelum tidur malam ini, tulis 3 hal yang masih ada di pikiran.",
-    "emoji": "\ud83d\udcdd"
+    "emoji": "📝",
+    "chapterId": 3,
+    "chapterTitle": "Dekompresi Stres & Overthinking",
+    "speaker": "Vishal Dasani (Certified Sleep Educator)",
+    "videoResName": "video_stres"
   },
   {
     "id": "card_03",
     "day": 3,
     "title": "Aturan 15 Menit di Kasur",
-    "body": "Kalau kamu berbaring lebih dari 15 menit tapi belum mengantuk, kasur akan diasosiasikan otak dengan frustrasi, bukan tidur. Ini disebut stimulus control \u2014 teknik inti dari CBT-I (terapi tidur kognitif yang terbukti klinis).",
+    "body": "Kalau kamu berbaring lebih dari 15 menit tapi belum mengantuk, kasur akan diasosiasikan otak dengan frustrasi, bukan tidur. Ini disebut stimulus control — teknik inti dari CBT-I (terapi tidur kognitif yang terbukti klinis).",
     "action": "Malam ini, kalau dalam 15 menit belum tidur: bangun, baca buku fisik di pencahayaan redup, lalu kembali saat sudah mengantuk.",
-    "emoji": "\u23f0"
+    "emoji": "⏰",
+    "chapterId": 4,
+    "chapterTitle": "Penataan Kamar & Stimulus Kasur",
+    "speaker": "Vishal Dasani (Certified Sleep Educator)",
+    "videoResName": "video_kamar"
   },
   {
     "id": "card_04",
     "day": 4,
     "title": "Cahaya Pagi: Reset Jam Biologismu",
-    "body": "Paparan cahaya matahari 10\u201330 menit di pagi hari (sebelum jam 10) adalah sinyal terkuat untuk mereset ritme sirkadian. Ini mempercepat proses mengantuk di malam hari secara alami, tanpa suplemen apapun.",
+    "body": "Paparan cahaya matahari 10–30 menit di pagi hari (sebelum jam 10) adalah sinyal terkuat untuk mereset ritme sirkadian. Ini mempercepat proses mengantuk di malam hari secara alami, tanpa suplemen apapun.",
     "action": "Besok pagi, buka jendela kamar atau berdiri di luar selama 10 menit sambil sarapan. Tanpa kacamata hitam.",
-    "emoji": "\ud83c\udf05"
+    "emoji": "🌅",
+    "chapterId": 2,
+    "chapterTitle": "Manajemen Cahaya & Gawai",
+    "speaker": "Vishal Dasani (Certified Sleep Educator)",
+    "videoResName": null
   },
   {
     "id": "card_05",
@@ -37,31 +53,47 @@
     "title": "Layar Biru dan Hormon Tidurmu",
     "body": "Cahaya biru dari HP, laptop, dan lampu LED menekan produksi melatonin (hormon tidur) hingga 50%. Otak mengira masih siang. Satu jam tanpa layar sebelum tidur lebih efektif dari obat tidur ringan untuk mempercepat sleep onset.",
     "action": "Aktifkan mode malam atau night light di HP dan laptop sekarang. Atur jadwal otomatis mulai 1 jam sebelum jam tidurmu.",
-    "emoji": "\ud83d\udcf1"
+    "emoji": "📱",
+    "chapterId": 2,
+    "chapterTitle": "Manajemen Cahaya & Gawai",
+    "speaker": "Vishal Dasani (Certified Sleep Educator)",
+    "videoResName": "video_layar"
   },
   {
     "id": "card_06",
     "day": 6,
     "title": "Konsistensi Jam Bangun: Pondasi Segalanya",
-    "body": "Jam tidur yang berubah-ubah setiap malam adalah penyebab utama insomnia pada mahasiswa. Ironisnya, solusinya bukan memaksa tidur cepat \u2014 tapi bangun di jam yang SAMA setiap hari, bahkan akhir pekan. Tubuh akan mulai mengantuk lebih awal secara otomatis dalam 1\u20132 minggu.",
+    "body": "Jam tidur yang berubah-ubah setiap malam adalah penyebab utama insomnia pada mahasiswa. Ironisnya, solusinya bukan memaksa tidur cepat — tapi bangun di jam yang SAMA setiap hari, bahkan akhir pekan. Tubuh akan mulai mengantuk lebih awal secara otomatis dalam 1–2 minggu.",
     "action": "Set alarm bangun pagi di jam yang kamu pilih tadi. Besok pagi, jangan snooze.",
-    "emoji": "\ud83d\udd14"
+    "emoji": "🔔",
+    "chapterId": 4,
+    "chapterTitle": "Penataan Kamar & Stimulus Kasur",
+    "speaker": "Vishal Dasani (Certified Sleep Educator)",
+    "videoResName": null
   },
   {
     "id": "card_07",
     "day": 7,
     "title": "Teknik 4-7-8: Pernapasan Darurat Overthinking",
     "body": "Teknik pernapasan 4-7-8 mengaktifkan sistem saraf parasimpatik (mode istirahat) dalam hitungan detik. Dikembangkan Dr. Andrew Weil dari teknik pranayama yoga, ini adalah tombol off alami untuk otak yang masih aktif saat tubuh sudah di kasur.",
-    "action": "Coba sekarang: Tarik nafas 4 detik \u2192 Tahan 7 detik \u2192 Buang perlahan 8 detik. Ulangi 4 kali sebelum tidur malam ini.",
-    "emoji": "\ud83c\udf2c\ufe0f"
+    "action": "Coba sekarang: Tarik nafas 4 detik → Tahan 7 detik → Buang perlahan 8 detik. Ulangi 4 kali sebelum tidur malam ini.",
+    "emoji": "🌬️",
+    "chapterId": 3,
+    "chapterTitle": "Dekompresi Stres & Overthinking",
+    "speaker": "Vishal Dasani (Certified Sleep Educator)",
+    "videoResName": null
   },
   {
     "id": "card_08",
     "day": 8,
     "title": "Suhu Kamar dan Kualitas Tidur",
-    "body": "Suhu tubuh turun 1\u20132 derajat Celsius saat tidur dalam \u2014 ini sinyal biologis bahwa tidur dimulai. Kamar yang terlalu panas menghambat proses ini. Suhu ideal untuk tidur adalah 18\u201322 derajat. Di kamar kos tanpa AC, kipas angin yang diarahkan ke tubuh cukup membantu.",
+    "body": "Suhu tubuh turun 1–2 derajat Celsius saat tidur dalam — ini sinyal biologis bahwa tidur dimulai. Kamar yang terlalu panas menghambat proses ini. Suhu ideal untuk tidur adalah 18–22 derajat. Di kamar kos tanpa AC, kipas angin yang diarahkan ke tubuh cukup membantu.",
     "action": "Malam ini: nyalakan kipas angin, buka ventilasi kamar 30 menit sebelum tidur, dan coba tidur tanpa kaos kaki.",
-    "emoji": "\ud83c\udf21\ufe0f"
+    "emoji": "🌡️",
+    "chapterId": 4,
+    "chapterTitle": "Penataan Kamar & Stimulus Kasur",
+    "speaker": "Vishal Dasani (Certified Sleep Educator)",
+    "videoResName": null
   },
   {
     "id": "card_09",
@@ -69,31 +101,47 @@
     "title": "Makan Malam dan Kualitas Tidur",
     "body": "Makan berat kurang dari 2 jam sebelum tidur memaksa sistem pencernaan bekerja keras saat tubuh seharusnya istirahat. Ini mengurangi kualitas tidur REM dan membuatmu bangun tidak segar. Rasa lapar ringan justru lebih baik untuk tidur daripada perut terlalu penuh.",
     "action": "Tetapkan jam makan malam terakhirmu: minimal 2 jam sebelum jam tidur. Kalau lapar, pilih camilan ringan seperti pisang, kurma, atau susu hangat.",
-    "emoji": "\ud83c\udf7d\ufe0f"
+    "emoji": "🍽️",
+    "chapterId": 1,
+    "chapterTitle": "Regulasi Kafein & Nutrisi",
+    "speaker": "Vishal Dasani (Certified Sleep Educator)",
+    "videoResName": null
   },
   {
     "id": "card_10",
     "day": 10,
     "title": "Olahraga: Waktu yang Tepat",
-    "body": "Olahraga meningkatkan kualitas tidur dalam secara signifikan \u2014 tapi waktunya penting. Olahraga intens seperti lari atau gym kurang dari 3 jam sebelum tidur justru meningkatkan adrenalin dan suhu tubuh inti, membuatmu sulit tidur. Pagi atau sore adalah waktu ideal.",
+    "body": "Olahraga meningkatkan kualitas tidur dalam secara signifikan — tapi waktunya penting. Olahraga intens seperti lari atau gym kurang dari 3 jam sebelum tidur justru meningkatkan adrenalin dan suhu tubuh inti, membuatmu sulit tidur. Pagi atau sore adalah waktu ideal.",
     "action": "Jadwalkan olahraga rutinmu sebelum jam 7 malam. Kalau malam, ganti dengan jalan santai 15 menit atau stretching ringan.",
-    "emoji": "\ud83c\udfc3"
+    "emoji": "🏃",
+    "chapterId": 4,
+    "chapterTitle": "Penataan Kamar & Stimulus Kasur",
+    "speaker": "Vishal Dasani (Certified Sleep Educator)",
+    "videoResName": null
   },
   {
     "id": "card_11",
     "day": 11,
     "title": "Tidur Siang: Aturan 20 Menit",
-    "body": "Tidur siang lebih dari 30 menit masuk ke siklus tidur dalam dan membuat sleep inertia \u2014 rasa pusing dan lemas saat bangun. Lebih parah, ini memakan tekanan tidur malammu sehingga susah mengantuk di malam hari.",
+    "body": "Tidur siang lebih dari 30 menit masuk ke siklus tidur dalam dan membuat sleep inertia — rasa pusing dan lemas saat bangun. Lebih parah, ini memakan tekanan tidur malammu sehingga susah mengantuk di malam hari.",
     "action": "Kalau perlu tidur siang, set timer 20 menit. Tidur siang setelah jam 3 sore sebaiknya dihindari.",
-    "emoji": "\ud83d\ude34"
+    "emoji": "😴",
+    "chapterId": 2,
+    "chapterTitle": "Manajemen Cahaya & Gawai",
+    "speaker": "Vishal Dasani (Certified Sleep Educator)",
+    "videoResName": null
   },
   {
     "id": "card_12",
     "day": 12,
     "title": "Rutinitas Wind-Down: Sinyal untuk Otak",
-    "body": "Otak butuh sinyal transisi bahwa hari sudah selesai, seperti ritual shutdown komputer. Membuat rutinitas malam yang konsisten selama 30\u201345 menit melatih otak untuk otomatis memulai proses mengantuk saat rutinitas itu dimulai.",
+    "body": "Otak butuh sinyal transisi bahwa hari sudah selesai, seperti ritual shutdown komputer. Membuat rutinitas malam yang konsisten selama 30–45 menit melatih otak untuk otomatis memulai proses mengantuk saat rutinitas itu dimulai.",
     "action": "Rancang 3 aktivitas wind-down malam kamu sekarang. Lakukan di urutan yang sama setiap malam mulai malam ini.",
-    "emoji": "\ud83c\udf19"
+    "emoji": "🌙",
+    "chapterId": 3,
+    "chapterTitle": "Dekompresi Stres & Overthinking",
+    "speaker": "Vishal Dasani (Certified Sleep Educator)",
+    "videoResName": null
   },
   {
     "id": "card_13",
@@ -101,7 +149,11 @@
     "title": "Minuman Manis Malam: Musuh Tidur Tersembunyi",
     "body": "Minuman tinggi gula seperti boba, minuman energi, dan teh manis di malam hari menyebabkan lonjakan gula darah yang mengganggu tidur REM. Otak tetap aktif memproses energi gula padahal tubuh butuh istirahat.",
     "action": "Hindari minuman manis dan berkafein setelah jam 7 malam. Ganti dengan air putih atau teh herbal tanpa kafein.",
-    "emoji": "\ud83e\udde3"
+    "emoji": "🧣",
+    "chapterId": 1,
+    "chapterTitle": "Regulasi Kafein & Nutrisi",
+    "speaker": "Vishal Dasani (Certified Sleep Educator)",
+    "videoResName": null
   },
   {
     "id": "card_14",
@@ -109,6 +161,10 @@
     "title": "Mindset: Tidur adalah Investasi Produktivitas",
     "body": "Mahasiswa sering mengorbankan tidur demi produktivitas, padahal riset Matthew Walker membuktikan sebaliknya: kurang tidur menurunkan memori, konsentrasi, dan kemampuan belajar hingga 40%. Tidur cukup adalah investasi terbaik untuk prestasi akademik.",
     "action": "Tandai tantangan 14 hari ini selesai. Evaluasi: kebiasaan mana yang paling terasa dampaknya? Pertahankan satu kebiasaan itu seumur hidup.",
-    "emoji": "\ud83c\udfc6"
+    "emoji": "🏆",
+    "chapterId": 3,
+    "chapterTitle": "Dekompresi Stres & Overthinking",
+    "speaker": "Vishal Dasani (Certified Sleep Educator)",
+    "videoResName": null
   }
 ]

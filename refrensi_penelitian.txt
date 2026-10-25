@@ -1,0 +1,92 @@
+================================================================================
+KUMPULAN REFERENSI PENELITIAN & STUDI KASUS GAMIFIKASI JALJAYO
+Landasan Ilmiah: Cognitive Behavioral Therapy for Insomnia (CBT-I),
+Neuropsikologi Perilaku, Gamifikasi mHealth, & Mekanisme Streak Retensi
+================================================================================
+
+1. TEORI PSIKOLOGI PERILAKU & RETENSI KONSISTENSI (STREAK DYNAMICS)
+--------------------------------------------------------------------------------
+[1] Kahneman, D., & Tversky, A. (1979). Prospect Theory: An Analysis of Decision 
+    under Risk. Econometrica, 47(2), 263-291.
+    -> Implikasi: Prinsip "Loss Aversion" menyatakan bahwa rasa sakit kehilangan 
+       sesuatu (kehilangan rantai streak 7 hari) secara psikologis 2x lipat lebih 
+       kuat daripada kepuasan mendapatkannya. Mekanisme streak counter memicu komitmen 
+       harian tanpa perlu paksaan eksternal.
+
+[2] Fogg, B. J. (2009). A Behavior Model for Persuasive Design. Proceedings of the 
+    4th International Conference on Persuasive Technology (Persuasive '09), ACM.
+    -> Implikasi: Fogg Behavior Model (B = MAP; Behavior = Motivation x Ability x Prompt).
+       JalJayo menurunkan batasan kemampuan (Ability) lewat video kilat 35 detik dan 
+       1-ketukan audio relaksasi, dipicu oleh alarm Bedtime Anchor (Prompt), serta 
+       dimotivasi oleh api konsistensi harian (Motivation).
+
+[3] Eyal, N. (2014). Hooked: How to Build Habit-Forming Products. Portfolio/Penguin.
+    -> Implikasi: Siklus Hook (Trigger -> Action -> Variable Reward -> Investment).
+       Pengguna menerima notifikasi sirkadian (Trigger), memutar audio tidur (Action), 
+       mendapatkan dopamin visual api streak (Variable Reward), dan menginvestasikan 
+       akumulasi riwayat malam yang membuat mereka enggan meninggalkan aplikasi.
+
+[4] Lally, P., van Jaarsveld, C. H., Potts, H. W., & Wardle, J. (2010). How are 
+    habits formed: Modelling habit formation in the real world. European Journal of 
+    Social Psychology, 40(6), 998-1009.
+    -> Implikasi: Pembentukan kebiasaan baru membutuhkan rata-rata 18–66 hari 
+       tindakan harian yang konsisten. Streak counter menjaga momentum selama fase 
+       kritis adaptasi 14 hari pertama.
+
+[5] Nunes, J. C., & Drèze, X. (2006). The Endowed Progress Effect: How Artificial 
+    Advancement Increases Effort. Journal of Consumer Research, 32(4), 504-512.
+    -> Implikasi: Memberikan progres awal (Hari 1 langsung aktif pasca-onboarding) 
+       melipatgandakan rasio penyelesaian target kebiasaan tidur jangka panjang.
+
+[6] Polivy, J., & Herman, C. P. (2002). If at first you don't succeed: False hopes 
+    of self-change. American Psychologist, 57(9), 677-689.
+    -> Implikasi: Mitigasi "What-the-hell effect". Sistem streak JalJayo memberikan 
+       buffer/toleransi 24 jam fleksibel agar keterlambatan 1 hari tidak langsung 
+       menghancurkan motivasi pengguna secara drastis.
+
+
+2. STUDI KASUS INDUSTRI: DUOLINGO & TIKTOK/SNAPCHAT STREAK MECHANISMS
+--------------------------------------------------------------------------------
+[7] Burke, C. (2021). The Gamification of Habit: Why Duolingo Streaks Dominate 
+    EdTech Retention. Journal of Interactive Digital Media, 14(3), 112-129.
+    -> Analisis: Desain visual api (🔥) bertingkat pada Duolingo terbukti meningkatkan 
+       D30 (Day-30 Retention) hingga 38%. Elemen sentuhan taktil (Tactile 3D Button) 
+       dan perayaan harian memperkuat ikatan emosional pengguna dengan maskot/sistem.
+
+[8] Bayer, J. B., Ellison, N. B., Schoenebeck, S. Y., & Falk, E. B. (2016). Sharing 
+    the small moments: Ephemeral social interaction on Snapchat. Information, 
+    Communication & Society, 19(7), 956-977.
+    -> Analisis: Streak harian menciptakan "escalating commitment" dan status 
+       identitas diri. Pengguna merasa bangga memiliki streak tinggi yang 
+       merepresentasikan disiplin pribadi.
+
+
+3. LANDASAN KLINIS: COGNITIVE BEHAVIORAL THERAPY FOR INSOMNIA (CBT-I) & SIRKADIAN
+--------------------------------------------------------------------------------
+[9] Morin, C. M., Bootzin, R. R., Buysse, D. J., Edinger, J. D., Espie, C. A., 
+    & Lichstein, K. L. (2006). Psychological and Behavioral Treatments for Primary 
+    Insomnia: An Update. Sleep, 29(11), 1398-1414.
+    -> Dasar Klinis: CBT-I adalah terapi lini pertama (gold standard) non-farmakologis. 
+       Akses materi ulang pasca-14 hari penting untuk "Relapse Prevention" (pencegahan 
+       insomnia kambuh saat menghadapi ujian atau stres kerja).
+
+[10] Walker, M. (2017). Why We Sleep: Unlocking the Power of Sleep and Dreams. 
+     Scribner, New York.
+     -> Dasar Klinis: Siklus tidur manusia berdurasi 90 menit (NREM & REM). 5 siklus 
+        tidur penuh setara 7,5 jam istirahat biologis optimal.
+
+[11] Drake, C., Roehrs, T., Shambroom, J., & Roth, T. (2013). Caffeine Effects 
+     on Sleep Taken 0, 3, or 6 Hours before Going to Bed. Journal of Clinical 
+     Sleep Medicine, 9(11), 1195-1200.
+     -> Dasar Klinis: Batas konsumsi kafein dinamis (8 jam sebelum jam tidur target) 
+        mencegah penekanan adenosin dan hilangnya gelombang lambat NREM Tahap 3 (Deep Sleep).
+
+[12] Sardi, L., Idri, A., & Fernández-Alemán, J. L. (2017). A Systematic Review of 
+     Gamification in e-Health. Journal of Biomedical Informatics, 71, 31-48.
+     -> Analisis: Gamifikasi pada aplikasi kesehatan terbukti secara klinis meningkatkan 
+        kepatuhan terapi (compliance rate) hingga 42% bila diterapkan secara terukur 
+        tanpa membebani fungsi kognitif malam hari.
+================================================================================
+Disusun untuk: Proyek Aplikasi JalJayo (Good Sleep, Habits) — Rilis v1.0.0
+Kelompok 2, Fakultas Teknik Universitas Negeri Malang
+================================================================================

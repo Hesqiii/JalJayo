@@ -12,7 +12,15 @@ data class SleepSchedule(
     val wakeTime: LocalTime,
     val bedtime: LocalTime,
     val anchorTime: LocalTime
-)
+) {
+    /**
+     * Batas konsumsi kafein terakhir harian (Drake et al., 2013).
+     * Kafein memiliki waktu paruh 5–7 jam. Menghentikan asupan kafein 8 jam
+     * sebelum jam tidur melindungi kedalaman fase Deep Sleep (NREM Tahap 3).
+     */
+    val caffeineCurfew: LocalTime
+        get() = bedtime.minusHours(8)
+}
 
 /**
  * Menghitung jadwal tidur dan waktu anchor pengingat tidur berdasarkan jam bangun.
@@ -40,6 +48,6 @@ fun calculateSleepSchedule(wakeTime: LocalTime): SleepSchedule {
 val DEFAULT_WAKE_TIME: LocalTime = LocalTime.of(6, 0)
 
 /**
- * Jadwal tidur default JalJayo (bangun 06:00, tidur 22:30, notifikasi 21:45).
+ * Jadwal tidur default JalJayo (bangun 06:00, tidur 22:30, notifikasi 21:45, batas kafein 14:30).
  */
 val DEFAULT_SLEEP_SCHEDULE: SleepSchedule = calculateSleepSchedule(DEFAULT_WAKE_TIME)

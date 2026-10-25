@@ -16,6 +16,16 @@ class ComplaintPresetTest {
     }
 
     @Test
+    fun `keluhan screen fatigue memetakan ke preset audio RAIN_SOUND`() {
+        assertEquals(AudioPreset.RAIN_SOUND, getPresetForComplaint(Complaint.SCREEN_FATIGUE))
+    }
+
+    @Test
+    fun `keluhan irregular schedule memetakan ke preset audio OCEAN_WAVES`() {
+        assertEquals(AudioPreset.OCEAN_WAVES, getPresetForComplaint(Complaint.IRREGULAR_SCHEDULE))
+    }
+
+    @Test
     fun `menekan tombol lewati (null) memetakan ke preset default THETA_6HZ`() {
         assertEquals(AudioPreset.THETA_6HZ, getPresetForComplaint(null))
     }
