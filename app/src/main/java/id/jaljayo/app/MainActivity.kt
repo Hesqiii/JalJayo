@@ -162,6 +162,7 @@ class MainActivity : ComponentActivity() {
         connectToPlaybackService()
         checkBatteryOptimization()
         checkDeviceVolume()
+        handleDirectRelaxationIntent(intent)
 
         try {
             val filter = IntentFilter("android.media.VOLUME_CHANGED_ACTION")
@@ -219,8 +220,10 @@ class MainActivity : ComponentActivity() {
                                     settingsRepo.saveDefaultPreset(preset)
                                     BedtimeScheduler.scheduleBedtimeAlarm(
                                         this@MainActivity,
-                                        LocalTime.of(wakeHour, wakeMinute)
+                                        LocalTime.of(wakeHour, wakeMinute),
+                                        currentStreak
                                     )
+                                    requestNotificationPermissionIfNeeded()
                                     selectedPreset = preset
                                     setAudioPreset(preset)
                                     // Sinkronkan tab awal dengan jam perangkat asli saat ini
@@ -330,7 +333,8 @@ class MainActivity : ComponentActivity() {
                                                     settingsRepo.saveDefaultPreset(preset)
                                                     BedtimeScheduler.scheduleBedtimeAlarm(
                                                         this@MainActivity,
-                                                        LocalTime.of(wakeHour, wakeMinute)
+                                                        LocalTime.of(wakeHour, wakeMinute),
+                                                        currentStreak
                                                     )
                                                     selectedPreset = preset
                                                     setAudioPreset(preset)
@@ -365,11 +369,34 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        handleDirectRelaxationIntent(intent)
+    }
+
+    private fun handleDirectRelaxationIntent(intent: Intent?) {
+        if (intent?.getBooleanExtra(BedtimeReceiver.EXTRA_START_RELAXATION, false) == true) {
+            selectedTab = MainNavTab.NIGHT
+            currentScreen = "home"
+            controllerFuture?.addListener({
+                try {
+                    val controller = controllerFuture?.get()
+                    if (controller != null && !controller.isPlaying) {
+                        controller.play()
+                        startTimer(selectedDuration)
+                    }
+                } catch (_: Exception) {}
+            }, mainExecutor)
+        }
+    }
+
     override fun onResume() {
         super.onResume()
         checkNotificationPermission()
         checkBatteryOptimization()
         checkDeviceVolume()
+        handleDirectRelaxationIntent(intent)
         // Selaraskan pembacaan waktu dengan jam asli perangkat
         currentMode = appClock.getCurrentMode()
     }

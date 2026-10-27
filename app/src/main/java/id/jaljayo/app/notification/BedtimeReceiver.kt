@@ -77,6 +77,18 @@ class BedtimeReceiver : BroadcastReceiver() {
         val soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
         val vibrationPattern = longArrayOf(0, 500, 200, 500)
 
+        // Intent untuk aksi langsung "Mulai Relaksasi" dari lockscreen/notifikasi
+        val playIntent = Intent(context, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+            putExtra(EXTRA_START_RELAXATION, true)
+        }
+        val playPendingIntent = PendingIntent.getActivity(
+            context,
+            REQUEST_CODE_PLAY_AUDIO,
+            playIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_stat_bedtime)
             .setContentTitle(title)
@@ -89,6 +101,11 @@ class BedtimeReceiver : BroadcastReceiver() {
             .setVibrate(vibrationPattern)
             .setAutoCancel(true)
             .setContentIntent(contentPendingIntent)
+            .addAction(
+                R.drawable.ic_stat_bedtime,
+                "▶ Mulai Relaksasi",
+                playPendingIntent
+            )
             .build()
 
         // 6. Tampilkan notifikasi
@@ -109,6 +126,8 @@ class BedtimeReceiver : BroadcastReceiver() {
 
         const val EXTRA_TITLE = "extra_notification_title"
         const val EXTRA_MESSAGE = "extra_notification_message"
+        const val EXTRA_START_RELAXATION = "extra_start_relaxation"
+        private const val REQUEST_CODE_PLAY_AUDIO = 1003
 
         /**
          * Mendaftarkan Notification Channel secara dini (dapat dipanggil dari MainActivity).

@@ -113,7 +113,11 @@ object BedtimeScheduler {
      *
      * Kalau waktu anchor hari ini sudah lewat, otomatis dijadwalkan untuk keesokan hari.
      */
-    fun scheduleBedtimeAlarm(context: Context, wakeTime: java.time.LocalTime) {
+    fun scheduleBedtimeAlarm(
+        context: Context,
+        wakeTime: java.time.LocalTime,
+        currentStreak: Int = 1
+    ) {
         val bedtime = wakeTime.minusHours(7).minusMinutes(30)
         val anchorTime = bedtime.minusMinutes(45)
 
@@ -130,13 +134,14 @@ object BedtimeScheduler {
         }
 
         val bedtimeStr = "%02d:%02d".format(bedtime.hour, bedtime.minute)
+        val (title, message) = id.jaljayo.core.StreakTracker.formatGamifiedNotification(currentStreak, bedtimeStr)
         scheduleAlarm(
             context = context,
             triggerAtMillis = trigger.timeInMillis,
-            title = "Saatnya Bersiap Tidur 🌙",
-            message = "45 menit lagi adalah waktumu istirahat. Jam tidur ideal: $bedtimeStr"
+            title = title,
+            message = message
         )
-        Log.d(TAG, "Bedtime alarm dijadwalkan pukul ${anchorTime.hour}:${anchorTime.minute}")
+        Log.d(TAG, "Bedtime alarm dijadwalkan pukul ${anchorTime.hour}:${anchorTime.minute} dengan streak $currentStreak")
     }
 
     /**

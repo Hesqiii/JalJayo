@@ -549,6 +549,38 @@ private fun StepConfirmDuolingo(
 
         Spacer(Modifier.height(12.dp))
 
+        // Priming Notifikasi Otomatis (Choice Architecture & Zero-Effort Setup)
+        TactileCard(
+            backgroundColor = Color(0xFFEFF6FF),
+            borderColor = Color(0xFFBFDBFE),
+            shadowColor = Color(0xFF93C5FD)
+        ) {
+            Row(
+                modifier = Modifier.padding(14.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text("🔔", fontSize = 22.sp)
+                Spacer(Modifier.width(10.dp))
+                Column {
+                    Text(
+                        text = "Pengingat Sirkadian Otomatis Aktif",
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = DayPrimary
+                    )
+                    Spacer(Modifier.height(2.dp))
+                    Text(
+                        text = "JalJayo akan otomatis mengingatkanmu pukul ${schedule.anchorTime.format(timeFmt)} (45 menit sebelum tidur) agar kamu tidak perlu repot menyetel alarm manual setiap hari.",
+                        fontSize = 11.sp,
+                        color = Color(0xFF1E3A8A),
+                        lineHeight = 15.sp
+                    )
+                }
+            }
+        }
+
+        Spacer(Modifier.height(12.dp))
+
         // Catatan Transparansi Rekonfigurasi
         TactileCard(
             backgroundColor = Color(0xFFFEFCE8),
@@ -581,7 +613,7 @@ private fun StepConfirmDuolingo(
 
         // Tombol Sukses Besar
         Tactile3DButton(
-            text = "Mulai JalJayo 🚀",
+            text = "Aktifkan Otomatis & Mulai 🚀",
             onClick = onConfirm,
             containerColor = DaySuccess,
             shadowColor = DaySuccessDark
