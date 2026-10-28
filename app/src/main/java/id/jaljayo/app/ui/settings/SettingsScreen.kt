@@ -131,67 +131,160 @@ fun SettingsScreen(
             TactileCard {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(
-                        text = "Target Jam Bangun Pagi",
+                        text = "Target Jam Bangun Pagi (Fleksibel)",
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onBackground
                     )
                     Spacer(Modifier.height(4.dp))
                     Text(
-                        text = "Jam aktif memulai hari untuk menghitung jadwal tidur 5 siklus.",
+                        text = "Atur jam dan menit bangun pagi secara leluasa. Sistem otomatis menyesuaikan jadwal tidur dan jangkar pengingat.",
                         fontSize = 12.sp,
-                        color = DayTextSecondary
+                        color = DayTextSecondary,
+                        lineHeight = 16.sp
                     )
 
                     Spacer(Modifier.height(14.dp))
 
-                    Text(
-                        text = "%02d:%02d".format(wakeHour, wakeMinute),
-                        fontSize = 32.sp,
-                        fontWeight = FontWeight.ExtraBold,
-                        color = DayPrimary,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.fillMaxWidth()
-                    )
+                    // Kontrol Fleksibel Jam & Menit
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        // Pengatur Jam
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Text("JAM", fontSize = 10.sp, fontWeight = FontWeight.Bold, color = DayTextSecondary)
+                            Spacer(Modifier.height(4.dp))
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Box(
+                                    modifier = Modifier
+                                        .size(34.dp)
+                                        .clip(CircleShape)
+                                        .background(Color(0xFFF1F5F9))
+                                        .clickable { wakeHour = if (wakeHour == 0) 23 else wakeHour - 1 },
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text("−", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = DayPrimary)
+                                }
 
-                    Spacer(Modifier.height(14.dp))
+                                Spacer(Modifier.width(8.dp))
 
-                    // Pilihan Jam
-                    Text("Pilih Jam:", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = DayTextSecondary)
-                    Spacer(Modifier.height(6.dp))
-                    listOf(4, 5, 6, 7, 8, 9).chunked(3).forEach { hourRow ->
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            hourRow.forEach { hour ->
-                                TimeChoiceDuolingo(
-                                    label = "%02d:00".format(hour),
-                                    selected = wakeHour == hour,
-                                    modifier = Modifier.weight(1f),
-                                    onClick = { wakeHour = hour }
-                                )
+                                Box(
+                                    modifier = Modifier
+                                        .width(60.dp)
+                                        .clip(RoundedCornerShape(10.dp))
+                                        .background(Color(0xFFEFF6FF))
+                                        .padding(vertical = 8.dp),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text(
+                                        text = "%02d".format(wakeHour),
+                                        fontSize = 24.sp,
+                                        fontWeight = FontWeight.ExtraBold,
+                                        color = DayPrimary
+                                    )
+                                }
+
+                                Spacer(Modifier.width(8.dp))
+
+                                Box(
+                                    modifier = Modifier
+                                        .size(34.dp)
+                                        .clip(CircleShape)
+                                        .background(Color(0xFFF1F5F9))
+                                        .clickable { wakeHour = (wakeHour + 1) % 24 },
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text("+", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = DayPrimary)
+                                }
                             }
                         }
-                        Spacer(Modifier.height(6.dp))
+
+                        Spacer(Modifier.width(16.dp))
+                        Text(":", fontSize = 28.sp, fontWeight = FontWeight.ExtraBold, color = DayPrimary)
+                        Spacer(Modifier.width(16.dp))
+
+                        // Pengatur Menit
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Text("MENIT", fontSize = 10.sp, fontWeight = FontWeight.Bold, color = DayTextSecondary)
+                            Spacer(Modifier.height(4.dp))
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Box(
+                                    modifier = Modifier
+                                        .size(34.dp)
+                                        .clip(CircleShape)
+                                        .background(Color(0xFFF1F5F9))
+                                        .clickable { wakeMinute = if (wakeMinute < 5) 55 else wakeMinute - 5 },
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text("−", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = DayPrimary)
+                                }
+
+                                Spacer(Modifier.width(8.dp))
+
+                                Box(
+                                    modifier = Modifier
+                                        .width(60.dp)
+                                        .clip(RoundedCornerShape(10.dp))
+                                        .background(Color(0xFFEFF6FF))
+                                        .padding(vertical = 8.dp),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text(
+                                        text = "%02d".format(wakeMinute),
+                                        fontSize = 24.sp,
+                                        fontWeight = FontWeight.ExtraBold,
+                                        color = DayPrimary
+                                    )
+                                }
+
+                                Spacer(Modifier.width(8.dp))
+
+                                Box(
+                                    modifier = Modifier
+                                        .size(34.dp)
+                                        .clip(CircleShape)
+                                        .background(Color(0xFFF1F5F9))
+                                        .clickable { wakeMinute = (wakeMinute + 5) % 60 },
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text("+", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = DayPrimary)
+                                }
+                            }
+                        }
                     }
 
-                    Spacer(Modifier.height(10.dp))
+                    Spacer(Modifier.height(14.dp))
 
-                    // Pilihan Menit
-                    Text("Pilih Menit:", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = DayTextSecondary)
+                    // Preset Jam Pagi Cepat
+                    Text("Pilihan Cepat Jam Bangun:", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = DayTextSecondary)
                     Spacer(Modifier.height(6.dp))
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        horizontalArrangement = Arrangement.spacedBy(6.dp)
                     ) {
-                        listOf(0, 15, 30, 45).forEach { minute ->
-                            TimeChoiceDuolingo(
-                                label = ":%02d".format(minute),
-                                selected = wakeMinute == minute,
-                                modifier = Modifier.weight(1f),
-                                onClick = { wakeMinute = minute }
-                            )
+                        listOf(Pair(5, 0), Pair(5, 30), Pair(6, 0), Pair(6, 30), Pair(7, 0), Pair(7, 30)).forEach { (h, m) ->
+                            val isSelected = wakeHour == h && wakeMinute == m
+                            Box(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .clip(RoundedCornerShape(8.dp))
+                                    .background(if (isSelected) DayPrimary else Color(0xFFF1F5F9))
+                                    .clickable {
+                                        wakeHour = h
+                                        wakeMinute = m
+                                    }
+                                    .padding(vertical = 6.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = "%02d:%02d".format(h, m),
+                                    fontSize = 10.5.sp,
+                                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+                                    color = if (isSelected) Color.White else Color(0xFF334155)
+                                )
+                            }
                         }
                     }
 
@@ -206,15 +299,15 @@ fun SettingsScreen(
                     ) {
                         Column {
                             Text("Pengingat Anchor", fontSize = 11.sp, color = DayTextSecondary)
-                            Text(schedule.anchorTime.toString(), fontSize = 15.sp, fontWeight = FontWeight.Bold, color = DayPrimary)
+                            Text("%02d:%02d".format(schedule.anchorTime.hour, schedule.anchorTime.minute), fontSize = 15.sp, fontWeight = FontWeight.Bold, color = DayPrimary)
                         }
                         Column {
                             Text("Tidur Ideal", fontSize = 11.sp, color = DayTextSecondary)
-                            Text(schedule.bedtime.toString(), fontSize = 15.sp, fontWeight = FontWeight.Bold)
+                            Text("%02d:%02d".format(schedule.bedtime.hour, schedule.bedtime.minute), fontSize = 15.sp, fontWeight = FontWeight.Bold)
                         }
                         Column {
-                            Text("Bangun Pagi", fontSize = 11.sp, color = DayTextSecondary)
-                            Text("%02d:%02d".format(wakeHour, wakeMinute), fontSize = 15.sp, fontWeight = FontWeight.Bold)
+                            Text("Batas Kafein", fontSize = 11.sp, color = DayTextSecondary)
+                            Text("%02d:%02d".format(schedule.caffeineCurfew.hour, schedule.caffeineCurfew.minute), fontSize = 15.sp, fontWeight = FontWeight.Bold, color = Color(0xFFB45309))
                         }
                     }
                 }

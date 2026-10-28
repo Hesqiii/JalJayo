@@ -366,7 +366,7 @@ private fun DailyCardSection(
                         .padding(horizontal = 8.dp, vertical = 4.dp)
                 ) {
                     Text(
-                        text = "HARI KE-${card.day} • ${card.chapterTitle.uppercase()}",
+                        text = card.chapterTitle.uppercase(),
                         fontSize = 10.5.sp,
                         fontWeight = FontWeight.Bold,
                         color = DayPrimary
@@ -909,7 +909,7 @@ private fun CbtiCatalogDialog(
                                             Spacer(Modifier.width(8.dp))
                                             Column {
                                                 Text(
-                                                    text = "Hari ke-${card.day}: ${card.title}",
+                                                    text = card.title,
                                                     fontSize = 12.5.sp,
                                                     fontWeight = FontWeight.Bold,
                                                     color = Color(0xFF0F172A)

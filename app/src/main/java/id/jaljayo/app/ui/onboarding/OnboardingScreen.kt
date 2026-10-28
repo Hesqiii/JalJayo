@@ -278,7 +278,7 @@ private fun StepComplaintDuolingo(
 }
 
 /**
- * Langkah 1: Kebutuhan Durasi & Target Jam Bangun Pagi (Pilar Sirkadian)
+ * Langkah 1: Preferensi Jam Tidur Biasa & Durasi Tidur Fleksibel (Bedtime-First Approach)
  */
 @Composable
 private fun StepScheduleDuolingo(
@@ -289,6 +289,25 @@ private fun StepScheduleDuolingo(
     onTimeChange: (Int, Int) -> Unit,
     onNext: () -> Unit
 ) {
+    // Estimasi jam tidur awal berdasarkan jam bangun - durasi
+    var bedtimeHour by remember {
+        val totalMinutes = (wakeHour * 60 + wakeMinute) - (sleepDuration * 60).toInt()
+        val normalizedMinutes = ((totalMinutes % 1440) + 1440) % 1440
+        mutableIntStateOf(normalizedMinutes / 60)
+    }
+    var bedtimeMinute by remember {
+        val totalMinutes = (wakeHour * 60 + wakeMinute) - (sleepDuration * 60).toInt()
+        val normalizedMinutes = ((totalMinutes % 1440) + 1440) % 1440
+        mutableIntStateOf(normalizedMinutes % 60)
+    }
+
+    // Fungsi sinkronisasi jam bangun otomatis saat jam tidur / durasi berubah
+    fun updateCalculatedWakeTime(bHour: Int, bMinute: Int, dur: Float) {
+        val totalMinutes = (bHour * 60 + bMinute) + (dur * 60).toInt()
+        val normalizedMinutes = ((totalMinutes % 1440) + 1440) % 1440
+        onTimeChange(normalizedMinutes / 60, normalizedMinutes % 60)
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -307,25 +326,59 @@ private fun StepScheduleDuolingo(
         Spacer(Modifier.height(6.dp))
 
         Text(
-            text = "Tentukan Target Waktu Bangun Pagi Anda",
+            text = "Biasanya Anda tidur jam berapa di malam hari?",
             fontSize = 22.sp,
             fontWeight = FontWeight.ExtraBold,
-            color = MaterialTheme.colorScheme.onBackground
+            color = MaterialTheme.colorScheme.onBackground,
+            lineHeight = 28.sp
         )
 
         Spacer(Modifier.height(6.dp))
 
         Text(
-            text = "Sistem menghitung jadwal tidur ideal berbasis 5 siklus tidur lengkap (Walker, 2017).",
+            text = "Atur kebiasaan jam tidur Anda secara leluasa. Sistem akan menyelaraskan jadwal sirkadian dan jam bangun optimal secara otomatis.",
             fontSize = 13.sp,
-            color = DayTextSecondary
+            color = DayTextSecondary,
+            lineHeight = 18.sp
         )
+
+        Spacer(Modifier.height(14.dp))
+
+        // Catatan Rekomendasi Jam Tidur dari Aplikasi (Sains Sirkadian)
+        TactileCard(
+            backgroundColor = Color(0xFFFEFCE8),
+            borderColor = Color(0xFFFEF08A),
+            shadowColor = Color(0xFFFDE047)
+        ) {
+            Row(
+                modifier = Modifier.padding(12.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text("💡", fontSize = 20.sp)
+                Spacer(Modifier.width(10.dp))
+                Column {
+                    Text(
+                        text = "Rekomendasi Jam Tidur Sains: 22.00 – 23.30",
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF854D0E)
+                    )
+                    Spacer(Modifier.height(2.dp))
+                    Text(
+                        text = "Rentang biologis terbaik saat pelepasan melatonin optimal dan fase gelombang lambat (Deep Sleep NREM Tahap 3) mendominasi sebelum tengah malam (Walker, 2017).",
+                        fontSize = 11.sp,
+                        color = Color(0xFFA16207),
+                        lineHeight = 15.sp
+                    )
+                }
+            }
+        }
 
         Spacer(Modifier.height(20.dp))
 
-        // Pilihan Durasi Tidur
+        // Pengaturan Jam Tidur Fleksibel (Interactive Stepper & Scrolling)
         Text(
-            text = "Target Kebutuhan Tidur Harian:",
+            text = "Kebiasaan Jam Tidur Anda:",
             fontSize = 13.sp,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onBackground
@@ -333,102 +386,277 @@ private fun StepScheduleDuolingo(
 
         Spacer(Modifier.height(10.dp))
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            TactileChip(
-                text = "7.0 Jam",
-                isSelected = sleepDuration == 7.0f,
-                onClick = { onDurationChange(7.0f) },
-                modifier = Modifier.weight(1f)
-            )
-            TactileChip(
-                text = "7.5 Jam\n(5 Siklus) ✓",
-                isSelected = sleepDuration == 7.5f,
-                onClick = { onDurationChange(7.5f) },
-                modifier = Modifier.weight(1.2f)
-            )
-            TactileChip(
-                text = "8.0 Jam",
-                isSelected = sleepDuration == 8.0f,
-                onClick = { onDurationChange(8.0f) },
-                modifier = Modifier.weight(1f)
-            )
+        // Card Pengatur Jam & Menit Fleksibel
+        TactileCard {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    // Pengatur Jam
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text("JAM", fontSize = 10.sp, fontWeight = FontWeight.Bold, color = DayTextSecondary)
+                        Spacer(Modifier.height(4.dp))
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Box(
+                                modifier = Modifier
+                                    .size(34.dp)
+                                    .clip(CircleShape)
+                                    .background(Color(0xFFF1F5F9))
+                                    .clickable {
+                                        bedtimeHour = if (bedtimeHour == 0) 23 else bedtimeHour - 1
+                                        updateCalculatedWakeTime(bedtimeHour, bedtimeMinute, sleepDuration)
+                                    },
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text("−", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = DayPrimary)
+                            }
+
+                            Spacer(Modifier.width(8.dp))
+
+                            Box(
+                                modifier = Modifier
+                                    .width(60.dp)
+                                    .clip(RoundedCornerShape(10.dp))
+                                    .background(Color(0xFFEFF6FF))
+                                    .padding(vertical = 8.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = "%02d".format(bedtimeHour),
+                                    fontSize = 24.sp,
+                                    fontWeight = FontWeight.ExtraBold,
+                                    color = DayPrimary
+                                )
+                            }
+
+                            Spacer(Modifier.width(8.dp))
+
+                            Box(
+                                modifier = Modifier
+                                    .size(34.dp)
+                                    .clip(CircleShape)
+                                    .background(Color(0xFFF1F5F9))
+                                    .clickable {
+                                        bedtimeHour = (bedtimeHour + 1) % 24
+                                        updateCalculatedWakeTime(bedtimeHour, bedtimeMinute, sleepDuration)
+                                    },
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text("+", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = DayPrimary)
+                            }
+                        }
+                    }
+
+                    Spacer(Modifier.width(16.dp))
+                    Text(":", fontSize = 28.sp, fontWeight = FontWeight.ExtraBold, color = DayPrimary)
+                    Spacer(Modifier.width(16.dp))
+
+                    // Pengatur Menit
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text("MENIT", fontSize = 10.sp, fontWeight = FontWeight.Bold, color = DayTextSecondary)
+                        Spacer(Modifier.height(4.dp))
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Box(
+                                modifier = Modifier
+                                    .size(34.dp)
+                                    .clip(CircleShape)
+                                    .background(Color(0xFFF1F5F9))
+                                    .clickable {
+                                        bedtimeMinute = if (bedtimeMinute < 5) 55 else bedtimeMinute - 5
+                                        updateCalculatedWakeTime(bedtimeHour, bedtimeMinute, sleepDuration)
+                                    },
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text("−", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = DayPrimary)
+                            }
+
+                            Spacer(Modifier.width(8.dp))
+
+                            Box(
+                                modifier = Modifier
+                                    .width(60.dp)
+                                    .clip(RoundedCornerShape(10.dp))
+                                    .background(Color(0xFFEFF6FF))
+                                    .padding(vertical = 8.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = "%02d".format(bedtimeMinute),
+                                    fontSize = 24.sp,
+                                    fontWeight = FontWeight.ExtraBold,
+                                    color = DayPrimary
+                                )
+                            }
+
+                            Spacer(Modifier.width(8.dp))
+
+                            Box(
+                                modifier = Modifier
+                                    .size(34.dp)
+                                    .clip(CircleShape)
+                                    .background(Color(0xFFF1F5F9))
+                                    .clickable {
+                                        bedtimeMinute = (bedtimeMinute + 5) % 60
+                                        updateCalculatedWakeTime(bedtimeHour, bedtimeMinute, sleepDuration)
+                                    },
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text("+", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = DayPrimary)
+                            }
+                        }
+                    }
+                }
+
+                Spacer(Modifier.height(12.dp))
+
+                // Chip pilihan jam cepat
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    listOf(Pair(21, 30), Pair(22, 0), Pair(22, 30), Pair(23, 0), Pair(23, 30), Pair(0, 0)).forEach { (h, m) ->
+                        val isSelected = bedtimeHour == h && bedtimeMinute == m
+                        Box(
+                            modifier = Modifier
+                                .weight(1f)
+                                .clip(RoundedCornerShape(8.dp))
+                                .background(if (isSelected) DayPrimary else Color(0xFFF1F5F9))
+                                .clickable {
+                                    bedtimeHour = h
+                                    bedtimeMinute = m
+                                    updateCalculatedWakeTime(h, m, sleepDuration)
+                                }
+                                .padding(vertical = 6.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = "%02d:%02d".format(h, m),
+                                fontSize = 10.5.sp,
+                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+                                color = if (isSelected) Color.White else Color(0xFF334155)
+                            )
+                        }
+                    }
+                }
+            }
         }
 
-        Spacer(Modifier.height(20.dp))
+        Spacer(Modifier.height(18.dp))
 
-        // Pilihan Jam Bangun
+        // Target Kebutuhan Durasi Tidur Harian
         Text(
-            text = "Pilihan Jam Bangun Pagi:",
+            text = "Target Kebutuhan Durasi Tidur:",
             fontSize = 13.sp,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onBackground
         )
 
-        Spacer(Modifier.height(10.dp))
+        Spacer(Modifier.height(8.dp))
 
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalArrangement = Arrangement.spacedBy(6.dp)
         ) {
-            TactileChip(
-                text = "05:00",
-                isSelected = wakeHour == 5 && wakeMinute == 0,
-                onClick = { onTimeChange(5, 0) },
-                modifier = Modifier.weight(1f)
-            )
-            TactileChip(
-                text = "06:00 ✓",
-                isSelected = wakeHour == 6 && wakeMinute == 0,
-                onClick = { onTimeChange(6, 0) },
-                modifier = Modifier.weight(1f)
-            )
-            TactileChip(
-                text = "07:00",
-                isSelected = wakeHour == 7 && wakeMinute == 0,
-                onClick = { onTimeChange(7, 0) },
-                modifier = Modifier.weight(1f)
-            )
+            listOf(6.5f, 7.0f, 7.5f, 8.0f, 8.5f).forEach { dur ->
+                val isSelected = sleepDuration == dur
+                val label = if (dur == 7.5f) "7.5 Jam\n(5 Siklus) ✓" else "$dur Jam"
+                TactileChip(
+                    text = label,
+                    isSelected = isSelected,
+                    onClick = {
+                        onDurationChange(dur)
+                        updateCalculatedWakeTime(bedtimeHour, bedtimeMinute, dur)
+                    },
+                    modifier = Modifier.weight(if (dur == 7.5f) 1.25f else 1f)
+                )
+            }
         }
 
-        Spacer(Modifier.height(16.dp))
+        Spacer(Modifier.height(18.dp))
 
-        // Kalkulasi Pratinjau Cepat
-        val previewSchedule = calculateSleepSchedule(LocalTime.of(wakeHour, wakeMinute))
-        val timeFmt = DateTimeFormatter.ofPattern("HH.mm")
+        // Hasil Perhitungan Waktu Bangun Pagi Alami
         TactileCard(
             backgroundColor = Color(0xFFF0FDF4),
             borderColor = Color(0xFFBBF7D0),
             shadowColor = Color(0xFF86EFAC)
         ) {
-            Column(modifier = Modifier.padding(14.dp)) {
-                Text(
-                    text = "🔔 Kalkulasi Sirkadian & Kafein Terhitung:",
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color(0xFF15803D)
-                )
-                Spacer(Modifier.height(4.dp))
-                Text(
-                    text = "Jam Tidur Ideal: ${previewSchedule.bedtime.format(timeFmt)} • Pengingat Anchor: ${previewSchedule.anchorTime.format(timeFmt)}",
-                    fontSize = 12.5.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Color(0xFF166534)
-                )
-                Text(
-                    text = "Batas Kafein Terakhir: ${previewSchedule.caffeineCurfew.format(timeFmt)} (8 jam sebelum tidur)",
-                    fontSize = 11.5.sp,
-                    color = Color(0xFF15803D)
-                )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(14.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column {
+                    Text(
+                        text = "Perkiraan Waktu Bangun Pagi Alami:",
+                        fontSize = 11.5.sp,
+                        color = Color(0xFF15803D),
+                        fontWeight = FontWeight.SemiBold
+                    )
+                    Spacer(Modifier.height(2.dp))
+                    Text(
+                        text = "%02d:%02d WIB".format(wakeHour, wakeMinute),
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = Color(0xFF166534)
+                    )
+                    Text(
+                        text = "Otomatis dihitung dari jam tidur %02d:%02d + %.1f jam durasi".format(bedtimeHour, bedtimeMinute, sleepDuration),
+                        fontSize = 10.5.sp,
+                        color = Color(0xFF15803D)
+                    )
+                }
+
+                // Kontrol penyesuaian halus jam bangun
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Box(
+                        modifier = Modifier
+                            .size(32.dp)
+                            .clip(CircleShape)
+                            .background(Color.White)
+                            .clickable {
+                                val newMin = if (wakeMinute < 15) {
+                                    val newH = if (wakeHour == 0) 23 else wakeHour - 1
+                                    onTimeChange(newH, wakeMinute + 45)
+                                } else {
+                                    onTimeChange(wakeHour, wakeMinute - 15)
+                                }
+                            },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text("−", fontSize = 16.sp, fontWeight = FontWeight.Bold, color = Color(0xFF166534))
+                    }
+                    Spacer(Modifier.width(6.dp))
+                    Box(
+                        modifier = Modifier
+                            .size(32.dp)
+                            .clip(CircleShape)
+                            .background(Color.White)
+                            .clickable {
+                                val newMin = (wakeMinute + 15) % 60
+                                val newH = if (wakeMinute + 15 >= 60) (wakeHour + 1) % 24 else wakeHour
+                                onTimeChange(newH, newMin)
+                            },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text("+", fontSize = 16.sp, fontWeight = FontWeight.Bold, color = Color(0xFF166534))
+                    }
+                }
             }
         }
 
         Spacer(Modifier.height(24.dp))
 
         Tactile3DButton(
-            text = "Hitung & Tinjau Jadwal ➔",
+            text = "Lanjutkan ➔",
             onClick = onNext,
             containerColor = DayPrimary,
             shadowColor = DayPrimaryDark
@@ -439,7 +667,7 @@ private fun StepScheduleDuolingo(
 }
 
 /**
- * Langkah 2: Konfirmasi Akhir & Ringkasan Solusi
+ * Langkah 2: Konfirmasi Akhir & Ringkasan Solusi (Bersih, Minimalis, Tanpa Redundansi)
  */
 @Composable
 private fun StepConfirmDuolingo(
@@ -448,28 +676,26 @@ private fun StepConfirmDuolingo(
     wakeMinute: Int,
     onConfirm: () -> Unit
 ) {
-    val schedule = calculateSleepSchedule(LocalTime.of(wakeHour, wakeMinute))
     val preset = getPresetForComplaint(complaint)
-    val timeFmt = DateTimeFormatter.ofPattern("HH.mm")
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
-        Spacer(Modifier.height(8.dp))
+        Spacer(Modifier.height(12.dp))
 
         Box(
             modifier = Modifier
-                .size(48.dp)
+                .size(52.dp)
                 .clip(CircleShape)
                 .background(Color(0xFFDCFCE7)),
             contentAlignment = Alignment.Center
         ) {
-            Text("✓", fontSize = 24.sp, fontWeight = FontWeight.Bold, color = DaySuccess)
+            Text("✓", fontSize = 26.sp, fontWeight = FontWeight.Bold, color = DaySuccess)
         }
 
-        Spacer(Modifier.height(12.dp))
+        Spacer(Modifier.height(14.dp))
 
         Text(
             text = "Konfigurasi Tidur Siap!",
@@ -481,14 +707,15 @@ private fun StepConfirmDuolingo(
         Spacer(Modifier.height(6.dp))
 
         Text(
-            text = "Seluruh parameter telah disesuaikan secara ilmiah untuk kebutuhan biologis Anda.",
+            text = "JalJayo telah mengalibrasi ritme biologis dan audio relaksasi malam Anda.",
             fontSize = 13.sp,
-            color = DayTextSecondary
+            color = DayTextSecondary,
+            lineHeight = 18.sp
         )
 
         Spacer(Modifier.height(20.dp))
 
-        // Ringkasan Kartu
+        // Ringkasan Bersih: Hanya memuat Preset dan Target Bangun
         TactileCard {
             Column(modifier = Modifier.padding(16.dp)) {
                 Row(
@@ -497,7 +724,7 @@ private fun StepConfirmDuolingo(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "JADWAL SIRKADIAN & BATAS KAFEIN",
+                        text = "PRESET RELAKSASI MALAM",
                         fontSize = 11.sp,
                         fontWeight = FontWeight.Bold,
                         color = DayPrimary,
@@ -506,80 +733,32 @@ private fun StepConfirmDuolingo(
                     Text("✓ Terkalibrasi", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = DaySuccess)
                 }
 
-                Spacer(Modifier.height(12.dp))
+                Spacer(Modifier.height(10.dp))
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
+                    Text("🎧", fontSize = 26.sp)
+                    Spacer(Modifier.width(12.dp))
                     Column {
-                        Text("Target Bangun", fontSize = 11.sp, color = DayTextSecondary)
-                        Text("%02d:%02d".format(wakeHour, wakeMinute), fontSize = 15.sp, fontWeight = FontWeight.Bold)
-                    }
-                    Column {
-                        Text("Batas Kafein", fontSize = 11.sp, color = DayTextSecondary)
-                        Text(schedule.caffeineCurfew.format(timeFmt), fontSize = 15.sp, fontWeight = FontWeight.Bold, color = Color(0xFFB45309))
-                    }
-                    Column {
-                        Text("Pengingat Anchor", fontSize = 11.sp, color = DayTextSecondary)
-                        Text(schedule.anchorTime.format(timeFmt), fontSize = 15.sp, fontWeight = FontWeight.Bold, color = DayPrimary)
-                    }
-                    Column {
-                        Text("Tidur Ideal", fontSize = 11.sp, color = DayTextSecondary)
-                        Text(schedule.bedtime.format(timeFmt), fontSize = 15.sp, fontWeight = FontWeight.Bold)
-                    }
-                }
-
-                Spacer(Modifier.height(14.dp))
-
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(10.dp))
-                        .background(Color(0xFFF8FAFC))
-                        .padding(12.dp)
-                ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text("🎧 Preset Relaksasi Malam: ", fontSize = 12.sp, fontWeight = FontWeight.Bold)
-                        Text(preset.displayName, fontSize = 12.sp, color = DayPrimary, fontWeight = FontWeight.Bold)
+                        Text(
+                            text = preset.displayName,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onBackground
+                        )
+                        Text(
+                            text = "Target Bangun: %02d:%02d WIB".format(wakeHour, wakeMinute),
+                            fontSize = 12.sp,
+                            color = DayTextSecondary
+                        )
                     }
                 }
             }
         }
 
-        Spacer(Modifier.height(12.dp))
-
-        // Priming Notifikasi Otomatis (Choice Architecture & Zero-Effort Setup)
-        TactileCard(
-            backgroundColor = Color(0xFFEFF6FF),
-            borderColor = Color(0xFFBFDBFE),
-            shadowColor = Color(0xFF93C5FD)
-        ) {
-            Row(
-                modifier = Modifier.padding(14.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text("🔔", fontSize = 22.sp)
-                Spacer(Modifier.width(10.dp))
-                Column {
-                    Text(
-                        text = "Pengingat Sirkadian Otomatis Aktif",
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = DayPrimary
-                    )
-                    Spacer(Modifier.height(2.dp))
-                    Text(
-                        text = "JalJayo akan otomatis mengingatkanmu pukul ${schedule.anchorTime.format(timeFmt)} (45 menit sebelum tidur) agar kamu tidak perlu repot menyetel alarm manual setiap hari.",
-                        fontSize = 11.sp,
-                        color = Color(0xFF1E3A8A),
-                        lineHeight = 15.sp
-                    )
-                }
-            }
-        }
-
-        Spacer(Modifier.height(12.dp))
+        Spacer(Modifier.height(14.dp))
 
         // Catatan Transparansi Rekonfigurasi
         TactileCard(
@@ -603,23 +782,24 @@ private fun StepConfirmDuolingo(
                     Text(
                         text = "Konfigurasi jadwal dan pilihan audio dapat disesuaikan kembali sewaktu-waktu di menu Pengaturan.",
                         fontSize = 11.sp,
-                        color = Color(0xFFA16207)
+                        color = Color(0xFFA16207),
+                        lineHeight = 15.sp
                     )
                 }
             }
         }
 
-        Spacer(Modifier.height(24.dp))
+        Spacer(Modifier.height(28.dp))
 
-        // Tombol Sukses Besar
+        // Tombol Mulai JalJayo Utama
         Tactile3DButton(
-            text = "Aktifkan Otomatis & Mulai 🚀",
+            text = "Mulai JalJayo 🚀",
             onClick = onConfirm,
             containerColor = DaySuccess,
             shadowColor = DaySuccessDark
         )
 
-        Spacer(Modifier.height(8.dp))
+        Spacer(Modifier.height(10.dp))
 
         Text(
             text = "Zero-Login • 100% Data Tersimpan Aman di Perangkat Anda",
