@@ -17,6 +17,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -24,6 +25,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -67,15 +69,29 @@ import kotlinx.coroutines.delay
 fun DayScreen(
     sleepSchedule: SleepSchedule,
     todayCard: DailyCard?,
-    isCardCompleted: Boolean,
-    onMarkCardDone: () -> Unit,
     onOpenPlayerClick: () -> Unit,
     onOpenSettingsClick: () -> Unit,
     modifier: Modifier = Modifier,
+    allCards: List<DailyCard> = emptyList(),
+    completedCards: Set<String> = emptySet(),
+    onToggleCardCompleted: (String) -> Unit = {},
     isNotificationPermissionGranted: Boolean = true,
     onOpenNotificationSettings: () -> Unit = {}
 ) {
     val scrollState = rememberScrollState()
+
+    var displayedDay by remember(todayCard) { mutableIntStateOf(todayCard?.day ?: 1) }
+
+    val effectiveAllCards = remember(allCards, todayCard) {
+        if (allCards.isNotEmpty()) allCards else listOfNotNull(todayCard)
+    }
+
+    val currentCard = remember(displayedDay, effectiveAllCards, todayCard) {
+        effectiveAllCards.firstOrNull { it.day == displayedDay } ?: todayCard
+    }
+
+    val isCardCompleted = currentCard?.id in completedCards
+    val isViewingToday = currentCard?.day == todayCard?.day
 
     Column(
         modifier = modifier
@@ -127,22 +143,82 @@ fun DayScreen(
             Spacer(modifier = Modifier.height(JalJayoSpace.medium))
         }
 
-        todayCard?.let { card ->
-            Text(
-                text = "Hari ${card.day.coerceAtMost(14)} dari 14",
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onBackground
-            )
+        // === Navigasi Hari Kartu Edukasi (Hari 1–14) ===
+        currentCard?.let { card ->
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    IconButton(
+                        onClick = { if (displayedDay > 1) displayedDay-- },
+                        enabled = displayedDay > 1,
+                        modifier = Modifier.size(36.dp)
+                    ) {
+                        Text(
+                            text = "◀",
+                            style = MaterialTheme.typography.titleMedium,
+                            color = if (displayedDay > 1)
+                                MaterialTheme.colorScheme.primary
+                            else
+                                MaterialTheme.colorScheme.outline.copy(alpha = 0.35f)
+                        )
+                    }
+
+                    Text(
+                        text = "Hari ${card.day} dari ${effectiveAllCards.size.coerceAtLeast(14)}",
+                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
+
+                    IconButton(
+                        onClick = { if (displayedDay < effectiveAllCards.size) displayedDay++ },
+                        enabled = displayedDay < effectiveAllCards.size,
+                        modifier = Modifier.size(36.dp)
+                    ) {
+                        Text(
+                            text = "▶",
+                            style = MaterialTheme.typography.titleMedium,
+                            color = if (displayedDay < effectiveAllCards.size)
+                                MaterialTheme.colorScheme.primary
+                            else
+                                MaterialTheme.colorScheme.outline.copy(alpha = 0.35f)
+                        )
+                    }
+                }
+
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    if (!isViewingToday) {
+                        TextButton(
+                            onClick = { displayedDay = todayCard?.day ?: 1 },
+                            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp)
+                        ) {
+                            Text(
+                                text = "Hari ini",
+                                style = MaterialTheme.typography.labelMedium,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    }
+
+                    Text(
+                        text = if (isCardCompleted) "Selesai" else if (isViewingToday) "Aktif" else "Pratinjau",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = if (isCardCompleted) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
         }
 
         Spacer(modifier = Modifier.height(JalJayoSpace.medium))
 
         // === Kartu Edukasi Harian (dari JSON) ===
-        if (todayCard != null) {
+        if (currentCard != null) {
             DailyCardSection(
-                card = todayCard,
+                card = currentCard,
                 isCompleted = isCardCompleted,
-                onMarkDone = onMarkCardDone
+                onMarkDone = { onToggleCardCompleted(currentCard.id) }
             )
         } else {
             // Fallback kalau JSON gagal terbaca

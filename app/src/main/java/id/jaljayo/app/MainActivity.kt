@@ -212,6 +212,9 @@ class MainActivity : ComponentActivity() {
             val todayCard = remember(installTimestamp) {
                 contentRepo.getTodayCard(installTimestamp)
             }
+            val allCards = remember {
+                contentRepo.getAllCards()
+            }
 
             val effectiveMode = debugModeOverride ?: currentMode
             val snackbarHostState = remember { SnackbarHostState() }
@@ -363,17 +366,16 @@ class MainActivity : ComponentActivity() {
                                         DayScreen(
                                             sleepSchedule = sleepSchedule,
                                             todayCard = todayCard,
-                                            isCardCompleted = todayCard?.id in completedCards,
+                                            allCards = allCards,
+                                            completedCards = completedCards,
+                                            onToggleCardCompleted = { cardId ->
+                                                coroutineScope.launch {
+                                                    settingsRepo.toggleCardCompleted(cardId)
+                                                }
+                                            },
                                             isNotificationPermissionGranted = isNotificationPermissionGranted,
                                             onOpenNotificationSettings = {
                                                 openNotificationSettings()
-                                            },
-                                            onMarkCardDone = {
-                                                todayCard?.let { card ->
-                                                    coroutineScope.launch {
-                                                        settingsRepo.toggleCardCompleted(card.id)
-                                                    }
-                                                }
                                             },
                                             onOpenPlayerClick = {
                                                 debugModeOverride = Mode.NIGHT
