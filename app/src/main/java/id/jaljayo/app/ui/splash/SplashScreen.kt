@@ -5,7 +5,13 @@ import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
+import id.jaljayo.app.R
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -86,6 +92,19 @@ fun SplashScreen(
             verticalArrangement = Arrangement.Center,
             modifier = Modifier.padding(horizontal = 32.dp)
         ) {
+            // Logo Ikon Aplikasi JalJayo
+            Image(
+                painter = painterResource(id = R.drawable.app_logo),
+                contentDescription = "Logo JalJayo",
+                modifier = Modifier
+                    .size(96.dp)
+                    .clip(RoundedCornerShape(24.dp))
+                    .scale(scale.value)
+                    .alpha(alpha.value)
+            )
+
+            Spacer(Modifier.height(18.dp))
+
             // Headline Utama "JalJayo" dengan Motion Graphic Scale & Fade
             Text(
                 text = "JalJayo",

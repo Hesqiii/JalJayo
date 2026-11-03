@@ -1,197 +1,142 @@
-# 🌙 JalJayo (Good Sleep, Habits)
+<p align="center">
+  <img src="app/src/main/res/drawable/app_logo.png" alt="JalJayo Logo" width="128" height="128" style="border-radius: 28px;">
+</p>
 
-> **Aplikasi Intervensi Kebiasaan Tidur & Pereda *Racing Thoughts* Mahasiswa Gen-Z**  
-> Proyek Mata Kuliah **Manajemen Inovasi** — Kelompok 2, Offering D6  
-> Fakultas Teknik, Universitas Negeri Malang
+<h1 align="center">JalJayo (Good Sleep, Habits)</h1>
 
-[![Platform](https://img.shields.io/badge/Platform-Android%20Native-3DDC84?logo=android&logoColor=white)](https://developer.android.com)
-[![Kotlin](https://img.shields.io/badge/Language-Kotlin%202.0-7F52FF?logo=kotlin&logoColor=white)](https://kotlinlang.org)
-[![UI](https://img.shields.io/badge/UI-Jetpack%20Compose%20(Material%203)-4285F4?logo=jetpackcompose&logoColor=white)](https://developer.android.com/jetpack/compose)
-[![Audio](https://img.shields.io/badge/Audio-AndroidX%20Media3%20ExoPlayer-FF6F00)](https://developer.android.com/media/media3)
-[![minSdk](https://img.shields.io/badge/minSdk-28%20(Android%209.0+)-blue)](#)
-[![Privacy](https://img.shields.io/badge/Privacy-100%25%20Offline%20(No%20Internet)-success)](#)
+<p align="center">
+  <strong>Sirkadian Sleep Coach &amp; Binaural Relaxation Audio • Terapi CBT-I Mandiri</strong><br>
+  Aplikasi intervensi ritme tidur sirkadian dan pereda <em>racing thoughts</em> dengan pendekatan gamifikasi taktil ala Duolingo.
+</p>
 
----
+<p align="center">
+  <a href="https://github.com/Hesqiii/JalJayo/releases/latest"><img src="https://img.shields.io/badge/Release-v1.1.1-2563EB?style=flat-square&logo=github" alt="Latest Release"></a>
+  <a href="https://developer.android.com"><img src="https://img.shields.io/badge/Platform-Android_8.0%2B-3DDC84?style=flat-square&logo=android&logoColor=white" alt="Platform"></a>
+  <a href="https://kotlinlang.org"><img src="https://img.shields.io/badge/Language-Kotlin_2.0-7F52FF?style=flat-square&logo=kotlin&logoColor=white" alt="Kotlin"></a>
+  <a href="https://developer.android.com/jetpack/compose"><img src="https://img.shields.io/badge/UI-Jetpack_Compose-4285F4?style=flat-square&logo=jetpackcompose&logoColor=white" alt="Compose"></a>
+  <a href="#"><img src="https://img.shields.io/badge/Privacy-100%25_Offline-10B981?style=flat-square" alt="Privacy"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-F59E0B?style=flat-square" alt="License"></a>
+</p>
 
-## 📌 Latar Belakang Masalah
-
-Berdasarkan riset kuesioner internal terhadap **27 responden mahasiswa Fakultas Teknik Universitas Negeri Malang (FT UM)**:
-* **81,5%** mahasiswa mengalami durasi tidur defisit (< 6 jam per hari).
-* **77,8%** terjebak siklus *doomscrolling* media sosial di atas kasur hingga larut malam akibat *overthinking* tugas kuliah, praktikum, dan masa depan (*racing thoughts*).
-
-Aplikasi tidur konvensional seringkali gagal karena:
-1. Mengharuskan registrasi dan login yang rumit (*high friction*).
-2. Menyajikan modul bacaan panjang di malam hari yang justru menyilaukan mata dan menunda tidur.
-3. Memerlukan koneksi internet dan berlangganan berbayar.
-
-**JalJayo** hadir dengan pendekatan **Zero-Login, Zero-Friction, 100% Data di Perangkat (Offline-First)** yang berlandaskan ilmu ritme sirkadian.
+<p align="center">
+  <a href="https://github.com/Hesqiii/JalJayo/releases/download/v1.1.1/JalJayo.apk">
+    <img src="https://img.shields.io/badge/⬇️_UNDUH_APK_TERBARU_(v1.1.1)-2563EB?style=for-the-badge&logo=android&logoColor=white" alt="Unduh APK">
+  </a>
+</p>
 
 ---
 
-## 🏛️ Tiga Pilar Intervensi Sirkadian
+## 📱 Alur Sistem & Arsitektur 8 Layar (Wireframe v1.1.0)
 
-```
-           ☀️ SIANG (06:00 - 20:00)           🔔 TRANSISI (-45 Mnt)         🌙 MALAM (20:00 - 05:59)
-     ┌───────────────────────────────────┐    ┌────────────────────┐    ┌───────────────────────────────┐
-     │  Edukasi Sains Tidur Mikro        │    │  Bedtime Anchor    │    │  One-Tap Wind-Down Player     │
-     │  - 1 Kartu Bacaan Singkat (≤80 kta)│ ─► │  - Notifikasi jam  │ ─► │  - UI Gelap Pekat (OLED Black)│
-     │  - 1 Video Vertikal Mikro (35 dtk)│    │    weker lokal     │    │  - Layar Mati Audio Berputar  │
-     │  - 1 Aksi Kebiasaan Nyata Hari Ini│    │  - Bangunkan layar │    │  - Cubic Fade-Out Timer       │
-     └───────────────────────────────────┘    └────────────────────┘    └───────────────────────────────┘
-```
+Berikut adalah cetak biru arsitektur antarmuka JalJayo mulai dari langkah diagnostik awal, konfigurasi fleksibel, beranda siang rendah beban kognitif, hingga pemutar audio malam dan setelan lokal:
 
-1. **☀️ Siang Hari (*Daylight Habits* | 06.00 – 20.00):**
-   Membangun kebiasaan tidur dari siang hari lewat **1 kartu edukasi sains tidur harian** (bacaan $\le$ 80 kata) dan **1 video edukasi vertikal pendek (35 detik)** berisikan 1 aksi nyata (misal: aturan batas kafein 6 jam sebelum tidur).
-2. **🔔 Transisi Tidur (*Local Bedtime Anchor* | 45 Menit Sebelum Tidur):**
-   Notifikasi jam weker presisi via `AlarmManager` yang membangunkan layar kunci ponsel dan mengajak mahasiswa mulai menutup laptop/tugas untuk bersiap istirahat.
-3. **🌙 Malam Hari (*Zero-Visual Wind-Down* | 20.00 – 05.59):**
-   **Night Lockout aktif otomatis pukul 20.00.** Akses konten video dan bacaan diistirahatkan untuk menjaga hormon melatonin. Layar berubah menjadi pemutar audio gelap tanpa stimulasi visual menyala dengan kurva peredupan otomatis (*cubic exponential fade-out*).
+<p align="center">
+  <img src="Wireframe_JalJayo_v1.1.svg" alt="JalJayo 8-Screen Wireframe Architecture" width="100%">
+</p>
+
+> *Berkas interaktif berbasis peramban juga dapat dibuka langsung melalui [`Wireframe_JalJayo_LoFi.html`](Wireframe_JalJayo_LoFi.html).*
 
 ---
 
-## ✨ Fitur Utama Aplikasi
+## ✨ Fitur Utama (Highlights)
 
-- **⚡ Smart Diagnostic Micro-Onboarding (BR-00):** Selesai dalam $\le$ 3 ketukan visual (< 60 detik) saat pertama kali buka. Otomatis memetakan keluhan:
-  - *Otak muter terus / overthinking* $\to$ Preset **Theta Waves 6Hz**.
-  - *Kamar bising / tidak tenang* $\to$ Preset **Brown Noise**.
-  - Menghitung jadwal tidur sirkadian otomatis (5 siklus tidur $\times$ 90 menit = 7,5 jam).
-- **🎧 One-Tap Wind-Down Player:**
-  - 4 Preset Audio Relaksasi: **Theta Waves 6Hz**, **Brown Noise**, **Suara Hujan**, dan **Ombak Laut**.
-  - **Tahan Layar Mati (Screen-off playback):** Audio tetap stabil berputar di latar belakang meski HP dikunci atau aplikasi di-swipe dari recent apps.
-  - **Cubic Fade-Out Sleep Timer:** Pilihan durasi 15, 30, atau 45 menit. Pada sisa 2 menit terakhir, volume meredup secara halus dengan rumus matematis $(1 - progress)^3$ tanpa mengejutkan otak.
-  - Peringatan cerdas jika volume perangkat dalam keadaan 0% / hening (*UCS-01 Exc-1*).
-- **🔒 Night Lockout Otomatis:**
-  - Pukul 20.00: Aplikasi otomatis mengunci konten edukasi dan menampilkan pesan: *"Mode Malam Aktif. Konten video diistirahatkan untuk menjaga hormon tidurmu."*
-  - Pukul 06.00: Aplikasi kembali ke Mode Siang.
-- **📅 14 Hari Kartu Edukasi Tidur (Offline JSON):**
-  - Berisi 14 materi kebiasaan sirkadian lengkap tanpa koneksi server. Status "Sudah Dibaca" dicatat secara lokal.
-- **🎬 Pemutar Video Vertikal Ramah Gawai (Reels/Shorts style):**
-  - Pratinjau video mikro vertikal 9:16 di siang hari dengan penghitung waktu sirkadian dan tombol aksi selesai.
-- **⚙️ Pengaturan Mandiri & Riwayat Sesi Lokal:**
-  - Ubah target jam bangun, amati pratinjau kalkulasi sirkadian secara dinamis, ganti preset audio default, dan lihat total sesi relaksasi yang berhasil diselesaikan.
-- **🛠️ Panel Khusus Demo Dosen & Pengujian:**
-  - Tombol simulasi waktu instan: **"Paksa Siang"** dan **"Paksa Malam"** (memungkinkan demo Night Lockout kapan saja di depan dosen).
-  - Pemicu alarm tes 10 detik (verifikasi notifikasi jam weker di layar kunci).
-  - Dialog satu-langkah pembebasan optimasi baterai (pencegahan sistem XOS/MIUI membekukan aplikasi).
+### 🎧 Built-in Relaxation Player
+* **AndroidX Media3 & ExoPlayer**: Berjalan stabil sebagai *Foreground Service* mandiri tanpa jeda saat layar ponsel mati (*screen-off*) atau saat aplikasi ditutup.
+* **4 Pilihan Gelombang Suara Alami**:
+  * **Theta Waves 6Hz**: Gelombang otak binaural untuk meredakan kecemasan dan *racing thoughts*.
+  * **Brown Noise**: Derau frekuensi rendah untuk peredam suara (*sound masking*) kamar bising.
+  * **Suara Hujan Alami** & **Deburan Ombak Laut**: Menghadirkan relaksasi ritmis alami.
+* **Cubic Exponential Fade-Out Timer**: Pilihan durasi 15, 30, atau 45 menit. Pada 2 menit terakhir, volume suara menurun perlahan dengan formula $(1 - progress)^3$ tanpa mengejutkan otak.
+* **Auto-Dismiss Notification**: Notifikasi media pemutar di *notification drawer* otomatis terhapus secara bersih saat timer selesai.
+
+### ☀️ Sirkadian Engine & Smart Calibration
+* **Dynamic Caffeine Curfew**: Menghitung batas toleransi kafein terakhir (aturan 6–8 jam sebelum tidur ideal menurut riset *Drake et al., 2013*) secara otomatis.
+* **Flexible Bedtime & Wake Time**: Pemilihan jam tidur dan bangun yang fleksibel dengan interval stepper jam dan menit, dilengkapi rekomendasi jendela tidur medis (22.00 – 23.30).
+* **Anchor Reminder Alarm**: Pengingat transisi tidur 45 menit sebelum waktu istirahat via Android `AlarmManager` presisi tinggi.
+
+### 🎯 CBT-I Micro-Learning (Duolingo Style)
+* **Low Cognitive Load**: Menyajikan 1 **Kartu Misi Edukasi Harian** (*Hero Quest Card*) dengan tipografi tebal, instruksi praktis ringkas, dan tombol 3D taktil.
+* **Progressive Disclosure**: Penjelasan sains mendalam dan profil pakar (*Certified Sleep Educator Vishal Dasani*) dirangkum dalam modul akordeon yang rapi tanpa memenuhi layar beranda.
+* **8 Modul CBT-I Terstruktur**: Menjelajahi topik kafein, paparan cahaya biru (*digital sunset*), manajemen stres (*brain dump*), hingga termoregulasi kamar tidur.
+* **Sistem Streak Konsistensi (🔥)**: Membangun motivasi kebiasaan tidur teratur setiap hari.
+
+### 🌙 True OLED Circadian Protection
+* **Mode Malam Otomatis**: Layar bertransisi ke tema *True Pitch Black* (`#030712`) saat memasuki jam tidur untuk mematikan pixel layar OLED.
+* **Zero Blue Light**: Nol rangsangan visual menyilaukan demi menjaga pelepasan hormon alami melatonin (*Chang et al., 2015*).
+
+### 🔒 Yours to Keep (100% Private & Offline)
+* **Tanpa Registrasi / Akun**: Langsung dapat digunakan sejak detik pertama dipasang.
+* **Tanpa Pelacakan Data**: 100% pengaturan, status misi, dan streak disimpan di perangkat lokal melalui **Android Jetpack DataStore**.
+* **Bebas Iklan & Langganan**: Dirancang murni sebagai sarana kesehatan tidur tanpa monetisasi intrusif.
 
 ---
 
-## 🏗️ Arsitektur Proyek
+## 🏛️ Arsitektur Proyek
 
-JalJayo dibangun menggunakan arsitektur multi-modul yang rapi (*Clean Architecture & Separation of Concerns*):
+JalJayo menerapkan prinsip **Clean Architecture & Separation of Concerns** dalam struktur multi-modul:
 
 ```
 JalJayo/
-├── :core                    # Modul Kotlin Murni (TANPA android.* SDK)
-│   ├── Mode.kt              # Enum DAY/NIGHT & fungsi evaluasi waktu getMode()
-│   ├── SleepSchedule.kt     # Algoritma sirkadian 5 siklus & midnight crossing
-│   ├── ComplaintPreset.kt   # Pemetaan keluhan onboarding ke preset audio
-│   └── AppClock.kt          # Abstraksi jam sistem / jam virtual untuk tes
+├── :core                           # Modul Kotlin Murni (Bebas ketergantungan Android SDK)
+│   ├── Mode.kt                     # Logika evaluasi waktu siang/malam (DAY / NIGHT)
+│   ├── SleepSchedule.kt            # Algoritma sirkadian 5 siklus tidur & midnight crossing
+│   ├── ComplaintPreset.kt          # Pemetaan keluhan pengguna ke preset audio relaksasi
+│   └── AppClock.kt                 # Abstraksi jam sistem untuk kestabilan pengujian otomatis
 │
-└── :app                     # Modul Android Native & Jetpack Compose
+└── :app                            # Modul Android Native & Jetpack Compose
     ├── audio/
-    │   ├── PlaybackService.kt # MediaSessionService Media3 + ExoPlayer
-    │   └── SleepTimer.kt      # Timer coroutine + fade-out kubik di service
+    │   ├── PlaybackService.kt      # MediaSessionService Media3 + ExoPlayer background engine
+    │   └── SleepTimer.kt           # Timer coroutine dengan kurva fade-out eksponensial
     ├── data/
-    │   ├── SettingsRepository.kt # DataStore Preferences (konfigurasi & riwayat sesi)
-    │   └── ContentRepository.kt  # Parser kartu edukasi JSON dari assets
+    │   ├── SettingsRepository.kt   # Penyimpanan lokal DataStore Preferences (offline-first)
+    │   └── ContentRepository.kt    # Parser materi edukasi CBT-I dari berkas JSON lokal
     ├── notification/
-    │   ├── BedtimeScheduler.kt   # AlarmManager setAlarmClock presisi tinggi
-    │   ├── BedtimeReceiver.kt    # Pemicu notifikasi heads-up di lock screen
-    │   └── BootReceiver.kt       # Pemulih alarm otomatis setelah ponsel reboot
+    │   ├── BedtimeScheduler.kt     # AlarmManager setAlarmClock presisi tinggi
+    │   └── BedtimeReceiver.kt      # BroadcastReceiver pemicu notifikasi layar kunci
     └── ui/
-        ├── home/                 # DayScreen.kt & NightScreen.kt
-        ├── onboarding/           # OnboardingScreen.kt (diagnostik kilat)
-        ├── settings/             # SettingsScreen.kt (pengaturan sirkadian)
-        └── MainActivity.kt       # Single-activity controller & routing
+        ├── components/             # Komponen taktil 3D Duolingo (Button, Card, Streak Pill)
+        ├── home/                   # DayScreen (Mode Siang) & NightScreen (Mode Malam)
+        ├── onboarding/             # Smart Diagnostic Micro-Onboarding (3 Langkah)
+        ├── settings/               # Layar Preferensi & Pengaturan Jadwal Fleksibel
+        ├── splash/                 # Splash Screen animasi dengan logo resmi
+        └── theme/                  # Palet warna sirkadian & sistem tipografi
 ```
 
 ---
 
-## 💻 Tech Stack & Kebutuhan Sistem
+## 🛠️ Panduan Build & Menjalankan Aplikasi
 
-| Komponen | Teknologi yang Digunakan | Alasan Pemilihan |
-|---|---|---|
-| **Bahasa** | Kotlin 2.0 (Kotlin DSL) | Bahasa resmi Android modern, null-safety, dan coroutines. |
-| **UI Toolkit** | Jetpack Compose (Material 3) | Declarative UI reaktif, modern, dan performa tinggi tanpa XML. |
-| **Tipografi** | Plus Jakarta Sans (Tokotype) | Dibundel dari folder `static/`; lisensi SIL Open Font License 1.1 ([teks lisensi](https://github.com/tokotype/PlusJakartaSans/blob/master/OFL.txt)). |
-| **Audio Engine** | AndroidX Media3 (ExoPlayer 1.11.1) | Standar resmi Google untuk background audio dan kontrol lock screen. |
-| **Penyimpanan** | Jetpack DataStore Preferences | Pengganti modern SharedPreferences, asinkron via Coroutine Flow. |
-| **Penjadwal** | Android `AlarmManager` (`setAlarmClock`) | Membangunkan Doze mode & bypass freezer baterai vendor Android. |
-| **Kebutuhan OS** | Android 9.0+ (`minSdk` 28 s/d Android 16) | Mencakup >92% perangkat Android aktif di Indonesia. |
-| **Izin Internet** | **NOL (Tidak ada izin `INTERNET`)** | Menjamin 100% privasi: data pengguna tidak pernah keluar dari HP. |
+### Kebutuhan Lingkungan:
+* **Android Studio**: Ladybug / Meerkat atau yang lebih baru.
+* **JDK**: OpenJDK 17 atau 21.
+* **Android SDK**: `minSdk 28` (Android 9.0 Pie) s.d. `targetSdk 35` (Android 15).
 
----
-
-## 🚀 Panduan Menjalankan Aplikasi
-
-### 1. Prasyarat Sistem
-* **Android Studio:** Versi *Ladybug*, *Koala*, atau yang lebih baru.
-* **JDK:** Java Development Kit versi 17 atau 21.
-* **Perangkat Uji:** Ponsel Android fisik (direkomendasikan) atau Android Emulator dengan API Level 28 ke atas.
-
-### 2. Kloning & Buka Proyek
+### Kompilasi dari Terminal:
 ```bash
-git clone https://github.com/USERNAME/JalJayo.git
-```
-Buka Android Studio, pilih **Open**, lalu arahkan ke folder `JalJayo`. Tunggu hingga proses **Gradle Sync** selesai.
+# 1. Kloning repositori
+git clone https://github.com/Hesqiii/JalJayo.git
+cd JalJayo
 
-### 3. Menjalankan Tes Unit (Unit Test)
-Modul `:core` memiliki 18 pengujian unit otomatis yang memvalidasi logika sirkadian dan pergantian mode melewati tengah malam.
-```powershell
-.\gradlew test
-```
-*Hasil yang diharapkan: **BUILD SUCCESSFUL** (18/18 tes lulus 100%).*
+# 2. Jalankan seluruh unit & functional test
+./gradlew test
 
-### 4. Melakukan Build APK Debug
-Untuk membuat file APK siap instal:
-```powershell
-.\gradlew assembleDebug
-```
-File APK akan ter-generate di:  
-`app/build/outputs/apk/debug/app-debug.apk`
+# 3. Kompilasi berkas instalasi APK Debug
+./gradlew assembleDebug
 
-### 5. Memasang ke HP Fisik via ADB
-Pastikan USB Debugging atau Wireless Debugging aktif di ponselmu:
-```powershell
-adb install -r "app\build\outputs\apk\debug\app-debug.apk"
+# Berkas APK akan terbentuk di: app/build/outputs/apk/debug/app-debug.apk
 ```
 
 ---
 
-## 🎬 Panduan Demo di Depan Dosen
+## 📚 Rujukan Ilmiah & Studi Fotobiologi
 
-Aplikasi telah dilengkapi **Menu Demo** bawaan sehingga kamu tidak perlu menunggu jam 20.00 malam atau menyetel jam HP secara manual:
-
-1. **Demo Smart Onboarding:**
-   - Hapus data aplikasi atau instal pertama kali.
-   - Pilih keluhan *"Otak muter terus"* $\to$ Pilih jam bangun `06:00` $\to$ Tekan *"Mulai JalJayo"*. Tunjukkan bahwa sistem otomatis menghitung jam tidur `22:30` dan pengingat `21:45`.
-2. **Demo Edukasi Siang & Video Vertikal (Pilar Siang):**
-   - Di beranda siang, tunjukkan ringkasan jadwal sirkadian dan kartu aksi hari ini.
-   - Ketuk kartu video vertikal: tampilkan pemutar video mikro 35 detik interaktif.
-3. **Demo Night Lockout Instan (Simulasi Waktu):**
-   - Ketuk menu **🛠️ Menu Demo** di bagian bawah layar.
-   - Pilih opsi **"Paksa Malam"**.
-   - Perhatikan bahwa UI seketika terkunci menjadi layar gelap pekat tanpa video/teks dengan pesan Snackbar resmi.
-4. **Demo Audio Latar Belakang & Fade-Out (Pilar Malam):**
-   - Tekan tombol **Play** (One-Tap). Audio Theta Waves/Brown Noise akan langsung berbunyi (< 200 ms).
-   - Kunci layar HP (*lock screen*): tunjukkan bahwa audio tetap berputar jernih dan kontrol Media Session muncul di lock screen.
-   - Hapus (*swipe-up*) aplikasi dari daftar *Recent Apps*: tunjukkan bahwa audio tidak mati.
-5. **Demo Notifikasi Jam Weker (Pilar Transisi):**
-   - Di panel Menu Demo, tekan tombol **"Picu Alarm (10 dtk)"**, lalu langsung kunci layar HP.
-   - Tepat setelah 10 detik, notifikasi *Bedtime Anchor* akan berbunyi dan menyalakan layar kunci HP.
+1. **Drake, C., Roehrs, T., Shambroom, J., & Roth, T. (2013).** *Caffeine effects on sleep taken 0, 3, or 6 hours before going to bed.* Journal of Clinical Sleep Medicine, 9(11), 1195-1200.
+2. **Chang, A. M., Aeschbach, D., Duffy, J. F., & Czeisler, C. A. (2015).** *Evening use of light-emitting eReaders negatively affects sleep, circadian timing, and next-morning alertness.* PNAS, 112(4), 1232-1237.
+3. **Walker, M. (2017).** *Why We Sleep: Unlocking the Power of Sleep and Dreams.* Scribner.
+4. **Dasani, V. (2020).** *Mindful Sleep Intervention & Cognitive Behavioral Therapy for Insomnia (CBT-I) Practice.* Jakarta Sleep Center.
 
 ---
 
-## 👥 Tim Pengembang (Kelompok 2 - Offering D6)
+## 📄 Lisensi
 
-Proyek ini dikembangkan untuk memenuhi tugas mata kuliah **Manajemen Inovasi**, Program Studi S1 Teknik Informatika, Fakultas Teknik, **Universitas Negeri Malang**:
-
-* **Kelompok 2 (Offering D6)**
-* **Fokus Riset:** *Sleep Intervention & Habit Formation for Freshmen Gen-Z*
-
----
-
-## 📄 Lisensi & Hak Cipta
-
-Dilisensikan di bawah lisensi akademik untuk keperluan edukasi dan riset inovasi di lingkungan Universitas Negeri Malang. Hak cipta © 2026 Tim Pengembang JalJayo.
+Proyek ini didistribusikan di bawah lisensi terbuka **MIT License**. Silakan lihat berkas [LICENSE](LICENSE) untuk informasi hak cipta dan atribusi lengkap.
