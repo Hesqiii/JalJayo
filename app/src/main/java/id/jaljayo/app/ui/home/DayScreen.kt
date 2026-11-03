@@ -193,13 +193,31 @@ fun DayScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Box(
-                    modifier = Modifier
-                        .size(40.dp)
-                        .clip(CircleShape)
-                        .background(if (isCurfewPassed) Color(0xFFFEE2E2) else Color(0xFFFEF3C7)),
-                    contentAlignment = Alignment.Center
+                    modifier = Modifier.size(44.dp)
                 ) {
-                    Text(if (isCurfewPassed) "☕⚠️" else "☕", fontSize = 18.sp)
+                    Box(
+                        modifier = Modifier
+                            .size(40.dp)
+                            .clip(CircleShape)
+                            .background(if (isCurfewPassed) Color(0xFFFEE2E2) else Color(0xFFFEF3C7))
+                            .align(Alignment.Center),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text("☕", fontSize = 20.sp)
+                    }
+                    if (isCurfewPassed) {
+                        Box(
+                            modifier = Modifier
+                                .size(16.dp)
+                                .clip(CircleShape)
+                                .background(Color(0xFFDC2626))
+                                .border(1.5.dp, Color.White, CircleShape)
+                                .align(Alignment.TopEnd),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text("!", fontSize = 10.sp, fontWeight = FontWeight.ExtraBold, color = Color.White)
+                        }
+                    }
                 }
                 Spacer(Modifier.width(12.dp))
                 Column {
@@ -351,9 +369,11 @@ private fun DailyCardSection(
     onMarkDone: () -> Unit,
     onWatchVideo: () -> Unit
 ) {
+    var isExpanded by remember { mutableStateOf(false) }
+
     TactileCard {
-        Column(modifier = Modifier.padding(18.dp)) {
-            // Header Topik & Badge Hari
+        Column(modifier = Modifier.padding(20.dp)) {
+            // Header Topik & Badge Status Duolingo
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -361,14 +381,14 @@ private fun DailyCardSection(
             ) {
                 Box(
                     modifier = Modifier
-                        .clip(RoundedCornerShape(8.dp))
+                        .clip(RoundedCornerShape(10.dp))
                         .background(Color(0xFFEFF6FF))
-                        .padding(horizontal = 8.dp, vertical = 4.dp)
+                        .padding(horizontal = 10.dp, vertical = 5.dp)
                 ) {
                     Text(
-                        text = card.chapterTitle.uppercase(),
-                        fontSize = 10.5.sp,
-                        fontWeight = FontWeight.Bold,
+                        text = "🎯 MISI HARI INI • " + card.chapterTitle.uppercase(),
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.ExtraBold,
                         color = DayPrimary
                     )
                 }
@@ -376,105 +396,15 @@ private fun DailyCardSection(
                 if (isCompleted) {
                     Box(
                         modifier = Modifier
-                            .clip(RoundedCornerShape(8.dp))
+                            .clip(RoundedCornerShape(10.dp))
                             .background(Color(0xFFDCFCE7))
-                            .padding(horizontal = 8.dp, vertical = 4.dp)
+                            .padding(horizontal = 10.dp, vertical = 5.dp)
                     ) {
                         Text(
-                            text = "✓ Diterapkan",
+                            text = "✓ Selesai (+1 🔥)",
                             fontSize = 11.sp,
-                            fontWeight = FontWeight.Bold,
+                            fontWeight = FontWeight.ExtraBold,
                             color = DaySuccess
-                        )
-                    }
-                }
-            }
-
-            Spacer(Modifier.height(12.dp))
-
-            // Judul & Emoji
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(card.emoji, fontSize = 28.sp)
-                Spacer(Modifier.width(10.dp))
-                Text(
-                    text = card.title,
-                    fontSize = 17.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onBackground,
-                    lineHeight = 22.sp
-                )
-            }
-
-            Spacer(Modifier.height(10.dp))
-
-            // Body Intisari Sains
-            Text(
-                text = card.body,
-                fontSize = 12.5.sp,
-                color = Color(0xFF334155),
-                lineHeight = 18.sp
-            )
-
-            Spacer(Modifier.height(12.dp))
-
-            // Banner Aksi Konkret
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(Color(0xFFF8FAFC))
-                    .border(1.dp, DaySurfaceBorder, RoundedCornerShape(12.dp))
-                    .padding(12.dp)
-            ) {
-                Column {
-                    Text(
-                        text = "🎯 Rencana Aksi Hari Ini:",
-                        fontSize = 11.5.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = DayPrimary
-                    )
-                    Spacer(Modifier.height(4.dp))
-                    Text(
-                        text = card.action,
-                        fontSize = 12.sp,
-                        color = Color(0xFF1E293B),
-                        lineHeight = 17.sp
-                    )
-                }
-            }
-
-            Spacer(Modifier.height(12.dp))
-
-            // Atribusi Narasumber Vishal Dasani dengan Foto Profil Asli
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(10.dp))
-                    .background(Color(0xFFEFF6FF))
-                    .padding(horizontal = 10.dp, vertical = 8.dp)
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Image(
-                        painter = painterResource(id = R.drawable.photo_profile_narasumber),
-                        contentDescription = "Foto Narasumber Vishal Dasani",
-                        modifier = Modifier
-                            .size(36.dp)
-                            .clip(CircleShape)
-                            .border(1.5.dp, DayPrimary, CircleShape),
-                        contentScale = ContentScale.Crop
-                    )
-                    Spacer(Modifier.width(10.dp))
-                    Column {
-                        Text(
-                            text = "Narasumber: Vishal Dasani",
-                            fontSize = 11.5.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = DayPrimary
-                        )
-                        Text(
-                            text = "Certified Sleep Educator & Sleep Coach Indonesia",
-                            fontSize = 10.sp,
-                            color = Color(0xFF1E3A8A)
                         )
                     }
                 }
@@ -482,37 +412,157 @@ private fun DailyCardSection(
 
             Spacer(Modifier.height(14.dp))
 
-            // Tombol Tonton Video & Tandai Paham
+            // Judul & Emoji Besar Ramah Pengguna
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(card.emoji, fontSize = 34.sp)
+                Spacer(Modifier.width(12.dp))
+                Column {
+                    Text(
+                        text = card.title,
+                        fontSize = 18.5.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = MaterialTheme.colorScheme.onBackground,
+                        lineHeight = 24.sp
+                    )
+                }
+            }
+
+            Spacer(Modifier.height(14.dp))
+
+            // Banner Aksi Praktis (High Readability, Low Cognitive Load)
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(14.dp))
+                    .background(Color(0xFFF1F5F9))
+                    .border(1.5.dp, Color(0xFFE2E8F0), RoundedCornerShape(14.dp))
+                    .padding(14.dp)
+            ) {
+                Column {
+                    Text(
+                        text = "💡 Rencana Aksi Praktis:",
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = DayPrimary
+                    )
+                    Spacer(Modifier.height(4.dp))
+                    Text(
+                        text = card.action,
+                        fontSize = 13.5.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = Color(0xFF1E293B),
+                        lineHeight = 19.sp
+                    )
+                }
+            }
+
+            Spacer(Modifier.height(16.dp))
+
+            // Tombol Utama Taktil 3D Khas Duolingo
             if (card.videoResName != null) {
-                Row(
+                Column(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
                     Tactile3DButton(
-                        text = "▶ Tonton Video Kilat",
+                        text = "▶ Tonton Video Kilat (30 Detik)",
                         onClick = onWatchVideo,
                         containerColor = DayPrimary,
                         shadowColor = DayPrimaryDark,
-                        modifier = Modifier.weight(1.1f)
+                        modifier = Modifier.fillMaxWidth()
                     )
 
                     Tactile3DButton(
-                        text = if (isCompleted) "✓ Paham" else "Tandai Paham",
+                        text = if (isCompleted) "✓ Misi Hari Ini Selesai" else "✓ Tandai Misi Selesai",
                         onClick = onMarkDone,
                         containerColor = if (isCompleted) DaySuccess else Color(0xFF64748B),
                         shadowColor = if (isCompleted) DaySuccessDark else Color(0xFF475569),
-                        modifier = Modifier.weight(0.9f)
+                        modifier = Modifier.fillMaxWidth()
                     )
                 }
             } else {
-                // Hari tanpa video kilat: tombol penuh (Wireframe Screen 2 Sync)
                 Tactile3DButton(
-                    text = if (isCompleted) "✓ Selesai & Diterapkan" else "✓ Tandai Paham & Terapkan",
+                    text = if (isCompleted) "✓ Misi Hari Ini Selesai" else "✓ Selesaikan Misi Hari Ini",
                     onClick = onMarkDone,
                     containerColor = if (isCompleted) DaySuccess else DayPrimary,
                     shadowColor = if (isCompleted) DaySuccessDark else DayPrimaryDark,
                     modifier = Modifier.fillMaxWidth()
                 )
+            }
+
+            Spacer(Modifier.height(12.dp))
+
+            // Progressive Disclosure: Pelajari Penjelasan Sains & Narasumber
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(10.dp))
+                    .clickable { isExpanded = !isExpanded }
+                    .padding(vertical = 8.dp, horizontal = 4.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = if (isExpanded) "Tutup Penjelasan Sains" else "📖 Pelajari Penjelasan Sains & Narasumber",
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = DayPrimary
+                )
+                Text(
+                    text = if (isExpanded) "▲" else "▼",
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = DayPrimary
+                )
+            }
+
+            if (isExpanded) {
+                Spacer(Modifier.height(10.dp))
+
+                // Intisari Sains Mendalam
+                Text(
+                    text = card.body,
+                    fontSize = 12.5.sp,
+                    color = Color(0xFF334155),
+                    lineHeight = 18.sp
+                )
+
+                Spacer(Modifier.height(12.dp))
+
+                // Atribusi Narasumber Vishal Dasani dengan Foto Asli
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(Color(0xFFEFF6FF))
+                        .padding(horizontal = 12.dp, vertical = 10.dp)
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Image(
+                            painter = painterResource(id = R.drawable.photo_profile_narasumber),
+                            contentDescription = "Foto Narasumber Vishal Dasani",
+                            modifier = Modifier
+                                .size(38.dp)
+                                .clip(CircleShape)
+                                .border(1.5.dp, DayPrimary, CircleShape),
+                            contentScale = ContentScale.Crop
+                        )
+                        Spacer(Modifier.width(10.dp))
+                        Column {
+                            Text(
+                                text = "Narasumber: Vishal Dasani",
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = DayPrimary
+                            )
+                            Text(
+                                text = "Certified Sleep Educator & Sleep Coach Indonesia",
+                                fontSize = 10.5.sp,
+                                color = Color(0xFF1E3A8A)
+                            )
+                        }
+                    }
+                }
             }
         }
     }

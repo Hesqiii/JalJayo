@@ -63,6 +63,15 @@ class PlaybackService : MediaSessionService() {
 
         player.repeatMode = Player.REPEAT_MODE_ONE
 
+        player.addListener(object : Player.Listener {
+            override fun onPlaybackStateChanged(playbackState: Int) {
+                if (playbackState == Player.STATE_ENDED) {
+                    stopForeground(STOP_FOREGROUND_REMOVE)
+                    stopSelf()
+                }
+            }
+        })
+
         loadAudioPreset(AudioPreset.BROWN_NOISE)
 
         sleepTimer = SleepTimer(
@@ -73,6 +82,9 @@ class PlaybackService : MediaSessionService() {
                 player.pause()
                 player.volume = 1.0f
                 broadcastTimerState(0L, false)
+                // Dismiss notifikasi dan hentikan foreground service secara bersih saat timer selesai
+                stopForeground(STOP_FOREGROUND_REMOVE)
+                stopSelf()
             }
         )
 
