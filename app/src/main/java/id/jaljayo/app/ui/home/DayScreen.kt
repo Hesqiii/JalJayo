@@ -95,6 +95,7 @@ fun DayScreen(
     var activeModalCard by remember { mutableStateOf<DailyCard?>(null) }
     var showStreakDialog by remember { mutableStateOf(false) }
     var showHelpDialog by remember { mutableStateOf(false) }
+    var showScienceModal by remember { mutableStateOf(false) }
 
     val timeFmt = DateTimeFormatter.ofPattern("HH.mm")
     val curfewStr = sleepSchedule.caffeineCurfew.format(timeFmt)
@@ -244,13 +245,16 @@ fun DayScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        var showScienceModal by remember { mutableStateOf(false) }
+
         // === Kartu Edukasi Harian (Daily Spotlight Micro-Card) ===
         if (todayCard != null) {
             DailyCardSection(
                 card = todayCard,
                 isCompleted = isCardCompleted,
                 onMarkDone = onMarkCardDone,
-                onWatchVideo = { activeModalCard = todayCard }
+                onWatchVideo = { activeModalCard = todayCard },
+                onOpenScienceModal = { showScienceModal = true }
             )
         } else {
             TactileCard {
@@ -310,13 +314,25 @@ fun DayScreen(
 
         // === Tombol Taktil Menuju Ruang Relaksasi Malam ===
         Tactile3DButton(
-            text = "🌙 Masuk Ruang Relaksasi Malam",
+            text = "🌙 MASUK RUANG RELAKSASI",
             onClick = onOpenPlayerClick,
-            containerColor = DayPrimary,
-            shadowColor = DayPrimaryDark
+            containerColor = Color(0xFF312E81),
+            shadowColor = Color(0xFF1E1B4B),
+            modifier = Modifier.fillMaxWidth()
         )
 
         Spacer(modifier = Modifier.height(24.dp))
+    }
+
+    if (showScienceModal && todayCard != null) {
+        CbtiScienceDetailModal(
+            card = todayCard,
+            onDismiss = { showScienceModal = false },
+            onMarkDoneAndDismiss = {
+                onMarkCardDone()
+                showScienceModal = false
+            }
+        )
     }
 
     // Modal Video Player Nyata jika user ingin menonton
@@ -367,7 +383,8 @@ private fun DailyCardSection(
     card: DailyCard,
     isCompleted: Boolean,
     onMarkDone: () -> Unit,
-    onWatchVideo: () -> Unit
+    onWatchVideo: () -> Unit,
+    onOpenScienceModal: () -> Unit = {}
 ) {
     var isExpanded by remember { mutableStateOf(false) }
 
@@ -492,27 +509,27 @@ private fun DailyCardSection(
 
             Spacer(Modifier.height(12.dp))
 
-            // Progressive Disclosure: Pelajari Penjelasan Sains & Narasumber
+            // Progressive Disclosure: Pelajari Penjelasan Sains Lengkap (Triggers Screen 5 Modal)
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(10.dp))
-                    .clickable { isExpanded = !isExpanded }
+                    .clickable(onClick = onOpenScienceModal)
                     .padding(vertical = 8.dp, horizontal = 4.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = if (isExpanded) "Tutup Penjelasan Sains" else "📖 Pelajari Penjelasan Sains & Narasumber",
+                    text = "📖 Pelajari Penjelasan Sains Lengkap ▾",
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Bold,
-                    color = DayPrimary
+                    color = Color(0xFF3B82F6)
                 )
                 Text(
-                    text = if (isExpanded) "▲" else "▼",
+                    text = "➔",
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Bold,
-                    color = DayPrimary
+                    color = Color(0xFF3B82F6)
                 )
             }
 
@@ -1113,34 +1130,44 @@ private fun SleepScheduleCard(schedule: SleepSchedule) {
     TactileCard {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
-                text = "JADWAL SIRKADIAN ANDA",
+                text = "JADWAL SIRKADIANMU",
                 fontSize = 11.sp,
                 fontWeight = FontWeight.Bold,
-                color = DayPrimary,
+                color = Color(0xFF64748B),
                 letterSpacing = 0.5.sp
             )
-            Spacer(Modifier.height(10.dp))
+            Spacer(Modifier.height(8.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Column {
-                    Text("Bangun Pagi", fontSize = 11.sp, color = DayTextSecondary)
-                    Text(schedule.wakeTime.format(timeFmt), fontSize = 15.sp, fontWeight = FontWeight.Bold)
-                }
-                Column {
-                    Text("Batas Kafein", fontSize = 11.sp, color = DayTextSecondary)
-                    Text(schedule.caffeineCurfew.format(timeFmt), fontSize = 15.sp, fontWeight = FontWeight.Bold, color = Color(0xFFB45309))
-                }
-                Column {
-                    Text("Pengingat Anchor", fontSize = 11.sp, color = DayTextSecondary)
-                    Text(schedule.anchorTime.format(timeFmt), fontSize = 15.sp, fontWeight = FontWeight.Bold, color = DayPrimary)
-                }
-                Column {
-                    Text("Tidur Ideal", fontSize = 11.sp, color = DayTextSecondary)
-                    Text(schedule.bedtime.format(timeFmt), fontSize = 15.sp, fontWeight = FontWeight.Bold)
-                }
+                Text(
+                    text = "☀️ Bangun: " + schedule.wakeTime.format(timeFmt),
+                    fontSize = 12.5.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF0F172A)
+                )
+                Text(
+                    text = "☕ Kafein: " + schedule.caffeineCurfew.format(timeFmt),
+                    fontSize = 12.5.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF0F172A)
+                )
+                Text(
+                    text = "🌙 Tidur: " + schedule.bedtime.format(timeFmt),
+                    fontSize = 12.5.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF0F172A)
+                )
             }
+            Spacer(Modifier.height(8.dp))
+            Text(
+                text = "✓ Ritme konsisten mendukung deep sleep",
+                fontSize = 10.5.sp,
+                fontWeight = FontWeight.Medium,
+                color = Color(0xFF16A34A)
+            )
         }
     }
 }
@@ -1175,6 +1202,177 @@ private fun NotificationPermissionBanner(
             }
             TextButton(onClick = onOpenSettingsClick) {
                 Text("Aktifkan", fontWeight = FontWeight.Bold, color = Color(0xFF991B1B), fontSize = 12.sp)
+            }
+        }
+    }
+}
+
+/**
+ * SCREEN 5: DETAIL SAINS BOTTOM SHEET / MODAL (Wireframe v1.1.0 Sync)
+ */
+@Composable
+private fun CbtiScienceDetailModal(
+    card: DailyCard,
+    onDismiss: () -> Unit,
+    onMarkDoneAndDismiss: () -> Unit
+) {
+    androidx.compose.ui.window.Dialog(
+        onDismissRequest = onDismiss,
+        properties = androidx.compose.ui.window.DialogProperties(usePlatformDefaultWidth = false)
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color(0xFF0F172A).copy(alpha = 0.6f))
+                .clickable(onClick = onDismiss),
+            contentAlignment = Alignment.BottomCenter
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable(enabled = false) {}
+                    .clip(RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp))
+                    .background(Color.White)
+                    .padding(24.dp)
+            ) {
+                Column(modifier = Modifier.fillMaxWidth()) {
+                    // Drag Handle
+                    Box(
+                        modifier = Modifier
+                            .align(Alignment.CenterHorizontally)
+                            .width(55.dp)
+                            .height(5.dp)
+                            .clip(RoundedCornerShape(3.dp))
+                            .background(Color(0xFFCBD5E1))
+                    )
+
+                    Spacer(Modifier.height(16.dp))
+
+                    // Header Modal
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Penjelasan Sains CBT-I",
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.ExtraBold,
+                            color = Color(0xFF0F172A)
+                        )
+                        Box(
+                            modifier = Modifier
+                                .size(32.dp)
+                                .clip(CircleShape)
+                                .background(Color(0xFFF1F5F9))
+                                .clickable(onClick = onDismiss),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text("✕", fontSize = 14.sp, color = Color(0xFF64748B), fontWeight = FontWeight.Bold)
+                        }
+                    }
+
+                    Spacer(Modifier.height(14.dp))
+
+                    // Topic Tag & Title
+                    Text(
+                        text = card.chapterTitle.uppercase(),
+                        fontSize = 11.5.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = DayPrimary,
+                        letterSpacing = 0.5.sp
+                    )
+                    Spacer(Modifier.height(4.dp))
+                    Text(
+                        text = card.title,
+                        fontSize = 17.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = Color(0xFF0F172A),
+                        lineHeight = 22.sp
+                    )
+
+                    Spacer(Modifier.height(16.dp))
+
+                    // Scientific Body Box
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(14.dp))
+                            .background(Color(0xFFF8FAFC))
+                            .border(1.dp, Color(0xFFE2E8F0), RoundedCornerShape(14.dp))
+                            .padding(14.dp)
+                    ) {
+                        Column {
+                            Text(
+                                text = card.body,
+                                fontSize = 12.5.sp,
+                                color = Color(0xFF334155),
+                                lineHeight = 18.sp
+                            )
+                            Spacer(Modifier.height(10.dp))
+                            Text(
+                                text = "Jurnal: Journal of Clinical Sleep Medicine (Drake et al., 2013)",
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = DayPrimary
+                            )
+                        }
+                    }
+
+                    Spacer(Modifier.height(16.dp))
+
+                    // Narasumber Profile Box
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(16.dp))
+                            .background(Color(0xFFEFF6FF))
+                            .border(1.dp, Color(0xFFBFDBFE), RoundedCornerShape(16.dp))
+                            .padding(12.dp)
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Image(
+                                painter = painterResource(id = R.drawable.photo_profile_narasumber),
+                                contentDescription = "Foto Narasumber Vishal Dasani",
+                                modifier = Modifier
+                                    .size(44.dp)
+                                    .clip(CircleShape)
+                                    .border(1.5.dp, DayPrimary, CircleShape),
+                                contentScale = ContentScale.Crop
+                            )
+                            Spacer(Modifier.width(12.dp))
+                            Column {
+                                Text(
+                                    text = "Vishal Dasani",
+                                    fontSize = 13.5.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color(0xFF1E3A8A)
+                                )
+                                Text(
+                                    text = "Certified Sleep Educator Indonesia",
+                                    fontSize = 11.sp,
+                                    color = Color(0xFF3B82F6)
+                                )
+                                Text(
+                                    text = "Pakar & Praktisi CBT-I Mandiri",
+                                    fontSize = 10.sp,
+                                    color = Color(0xFF64748B)
+                                )
+                            }
+                        }
+                    }
+
+                    Spacer(Modifier.height(24.dp))
+
+                    // Confirmation Button
+                    Tactile3DButton(
+                        text = "✓ SAYA PAHAM & TERAPKAN",
+                        onClick = onMarkDoneAndDismiss,
+                        containerColor = Color(0xFF22C55E),
+                        shadowColor = Color(0xFF15803D),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
             }
         }
     }

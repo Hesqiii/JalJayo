@@ -25,6 +25,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -111,7 +112,7 @@ fun OnboardingScreen(
                 Box(modifier = Modifier.weight(1f)) {
                     DuolingoProgressBar(
                         progress = progress,
-                        progressColor = DayPrimary
+                        progressColor = if (step == 2) Color(0xFF22C55E) else DayPrimary
                     )
                 }
 
@@ -163,6 +164,7 @@ fun OnboardingScreen(
                             complaint = selectedComplaint,
                             wakeHour = selectedWakeHour,
                             wakeMinute = selectedWakeMinute,
+                            sleepDuration = selectedSleepDuration,
                             onConfirm = {
                                 onFinished(
                                     getPresetForComplaint(selectedComplaint),
@@ -195,82 +197,83 @@ private fun StepComplaintDuolingo(
         Spacer(Modifier.height(8.dp))
 
         Text(
-            text = "KONFIGURASI AWAL SISTEM",
-            fontSize = 12.sp,
+            text = "LANGKAH 1 DARI 3",
+            fontSize = 11.sp,
             fontWeight = FontWeight.ExtraBold,
             color = DayPrimary,
             letterSpacing = 1.sp
         )
 
-        Spacer(Modifier.height(6.dp))
+        Spacer(Modifier.height(8.dp))
 
         Text(
-            text = "Apa kendala utama yang mengganggu kualitas istirahat Anda?",
-            fontSize = 22.sp,
+            text = "Apa kendala tidur\nyang paling sering kamu alami?",
+            fontSize = 20.sp,
             fontWeight = FontWeight.ExtraBold,
             color = MaterialTheme.colorScheme.onBackground,
-            lineHeight = 28.sp
+            lineHeight = 26.sp
         )
 
         Spacer(Modifier.height(6.dp))
 
         Text(
-            text = "Pilih salah satu kondisi yang paling sering Anda alami untuk kalibrasi audio dan ritme istirahat.",
-            fontSize = 13.sp,
+            text = "Pilih satu untuk kalibrasi modul CBT-I personalmu.",
+            fontSize = 12.sp,
             color = DayTextSecondary
         )
 
-        Spacer(Modifier.height(20.dp))
+        Spacer(Modifier.height(18.dp))
 
-        // Opsi 1: Ruminasi & Overthinking
+        // Opsi 1: Sering ngopi & sulit rileks
         TactileSelectOption(
-            title = Complaint.RACING_THOUGHTS.title,
-            subtitle = Complaint.RACING_THOUGHTS.description,
+            title = "Sering ngopi & sulit rileks",
+            subtitle = "Kafein malam mengganggu rasa kantuk alami",
             isSelected = selected == Complaint.RACING_THOUGHTS,
-            badgeEmoji = Complaint.RACING_THOUGHTS.iconEmoji,
+            badgeEmoji = "☕",
             onClick = { onSelect(Complaint.RACING_THOUGHTS) }
         )
 
         Spacer(Modifier.height(12.dp))
 
-        // Opsi 2: Polusi Suara Lingkungan
+        // Opsi 2: Scrolling HP hingga larut
         TactileSelectOption(
-            title = Complaint.NOISY_ROOM.title,
-            subtitle = Complaint.NOISY_ROOM.description,
-            isSelected = selected == Complaint.NOISY_ROOM,
-            badgeEmoji = Complaint.NOISY_ROOM.iconEmoji,
-            onClick = { onSelect(Complaint.NOISY_ROOM) }
-        )
-
-        Spacer(Modifier.height(12.dp))
-
-        // Opsi 3: Kelelahan Stimulasi Layar Gawai
-        TactileSelectOption(
-            title = Complaint.SCREEN_FATIGUE.title,
-            subtitle = Complaint.SCREEN_FATIGUE.description,
+            title = "Scrolling HP hingga larut",
+            subtitle = "Cahaya biru menekan hormon melatonin",
             isSelected = selected == Complaint.SCREEN_FATIGUE,
-            badgeEmoji = Complaint.SCREEN_FATIGUE.iconEmoji,
+            badgeEmoji = "📱",
             onClick = { onSelect(Complaint.SCREEN_FATIGUE) }
         )
 
         Spacer(Modifier.height(12.dp))
 
-        // Opsi 4: Ketegangan Tubuh & Ritme Tidak Teratur
+        // Opsi 3: Overthinking & stres kerja
         TactileSelectOption(
-            title = Complaint.IRREGULAR_SCHEDULE.title,
-            subtitle = Complaint.IRREGULAR_SCHEDULE.description,
+            title = "Overthinking & stres kerja",
+            subtitle = "Pikiran berputar saat rebahan di ranjang",
+            isSelected = selected == Complaint.NOISY_ROOM,
+            badgeEmoji = "🤯",
+            onClick = { onSelect(Complaint.NOISY_ROOM) }
+        )
+
+        Spacer(Modifier.height(12.dp))
+
+        // Opsi 4: Bangun tidur terasa lelah
+        TactileSelectOption(
+            title = "Bangun tidur terasa lelah",
+            subtitle = "Kurang fase deep sleep restoratif",
             isSelected = selected == Complaint.IRREGULAR_SCHEDULE,
-            badgeEmoji = Complaint.IRREGULAR_SCHEDULE.iconEmoji,
+            badgeEmoji = "⏰",
             onClick = { onSelect(Complaint.IRREGULAR_SCHEDULE) }
         )
 
         Spacer(Modifier.height(24.dp))
 
         Tactile3DButton(
-            text = "Lanjutkan ➔",
+            text = "LANJUT ➔",
             onClick = onNext,
             containerColor = DayPrimary,
-            shadowColor = DayPrimaryDark
+            shadowColor = DayPrimaryDark,
+            modifier = Modifier.fillMaxWidth()
         )
 
         Spacer(Modifier.height(16.dp))
@@ -316,59 +319,57 @@ private fun StepScheduleDuolingo(
         Spacer(Modifier.height(8.dp))
 
         Text(
-            text = "RITME SIRKADIAN BIOLOGIS",
-            fontSize = 12.sp,
+            text = "LANGKAH 2 DARI 3",
+            fontSize = 11.sp,
             fontWeight = FontWeight.ExtraBold,
             color = DayPrimary,
             letterSpacing = 1.sp
         )
 
-        Spacer(Modifier.height(6.dp))
+        Spacer(Modifier.height(8.dp))
 
         Text(
-            text = "Biasanya Anda tidur jam berapa di malam hari?",
-            fontSize = 22.sp,
+            text = "Biasanya kamu tidur jam berapa\ndi malam hari? 🌙",
+            fontSize = 19.sp,
             fontWeight = FontWeight.ExtraBold,
             color = MaterialTheme.colorScheme.onBackground,
-            lineHeight = 28.sp
+            lineHeight = 25.sp
         )
 
         Spacer(Modifier.height(6.dp))
 
         Text(
-            text = "Atur kebiasaan jam tidur Anda secara leluasa. Sistem akan menyelaraskan jadwal sirkadian dan jam bangun optimal secara otomatis.",
-            fontSize = 13.sp,
-            color = DayTextSecondary,
-            lineHeight = 18.sp
+            text = "Atur jam tidur & durasi secara leluasa.",
+            fontSize = 11.5.sp,
+            color = DayTextSecondary
         )
 
         Spacer(Modifier.height(14.dp))
 
-        // Catatan Rekomendasi Jam Tidur dari Aplikasi (Sains Sirkadian)
+        // Card Rekomendasi Medis (Exact Wireframe Screen 2)
         TactileCard(
-            backgroundColor = Color(0xFFFEFCE8),
-            borderColor = Color(0xFFFEF08A),
-            shadowColor = Color(0xFFFDE047)
+            backgroundColor = Color(0xFFFEF3C7),
+            borderColor = Color(0xFFFDE68A),
+            shadowColor = Color(0xFFFCD34D)
         ) {
             Row(
                 modifier = Modifier.padding(12.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("💡", fontSize = 20.sp)
+                Text("💡", fontSize = 18.sp)
                 Spacer(Modifier.width(10.dp))
                 Column {
                     Text(
-                        text = "Rekomendasi Jam Tidur Sains: 22.00 – 23.30",
-                        fontSize = 12.sp,
+                        text = "Rekomendasi Medis (22.00 – 23.30)",
+                        fontSize = 11.5.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color(0xFF854D0E)
+                        color = Color(0xFF92400E)
                     )
                     Spacer(Modifier.height(2.dp))
                     Text(
-                        text = "Rentang biologis terbaik saat pelepasan melatonin optimal dan fase gelombang lambat (Deep Sleep NREM Tahap 3) mendominasi sebelum tengah malam (Walker, 2017).",
-                        fontSize = 11.sp,
-                        color = Color(0xFFA16207),
-                        lineHeight = 15.sp
+                        text = "Sinkron dengan sekresi hormon melatonin alami.",
+                        fontSize = 10.5.sp,
+                        color = Color(0xFFB45309)
                     )
                 }
             }
@@ -656,10 +657,11 @@ private fun StepScheduleDuolingo(
         Spacer(Modifier.height(24.dp))
 
         Tactile3DButton(
-            text = "Lanjutkan ➔",
+            text = "LANJUT ➔",
             onClick = onNext,
             containerColor = DayPrimary,
-            shadowColor = DayPrimaryDark
+            shadowColor = DayPrimaryDark,
+            modifier = Modifier.fillMaxWidth()
         )
 
         Spacer(Modifier.height(16.dp))
@@ -674,32 +676,38 @@ private fun StepConfirmDuolingo(
     complaint: Complaint?,
     wakeHour: Int,
     wakeMinute: Int,
+    sleepDuration: Float = 7.5f,
     onConfirm: () -> Unit
 ) {
-    val preset = getPresetForComplaint(complaint)
+    val totalMinutes = (wakeHour * 60 + wakeMinute) - (sleepDuration * 60).toInt()
+    val normalizedMinutes = ((totalMinutes % 1440) + 1440) % 1440
+    val bedtimeHour = normalizedMinutes / 60
+    val bedtimeMinute = normalizedMinutes % 60
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
+            .verticalScroll(rememberScrollState()),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(Modifier.height(12.dp))
 
+        // Big Cheerful Illustration / Mascot Badge (Exact Wireframe Screen 3)
         Box(
             modifier = Modifier
-                .size(52.dp)
+                .size(96.dp)
                 .clip(CircleShape)
                 .background(Color(0xFFDCFCE7)),
             contentAlignment = Alignment.Center
         ) {
-            Text("✓", fontSize = 26.sp, fontWeight = FontWeight.Bold, color = DaySuccess)
+            Text("🎉", fontSize = 44.sp)
         }
 
-        Spacer(Modifier.height(14.dp))
+        Spacer(Modifier.height(16.dp))
 
         Text(
-            text = "Konfigurasi Tidur Siap!",
-            fontSize = 24.sp,
+            text = "Jadwal Tidur Siap!",
+            fontSize = 22.sp,
             fontWeight = FontWeight.ExtraBold,
             color = MaterialTheme.colorScheme.onBackground
         )
@@ -707,83 +715,87 @@ private fun StepConfirmDuolingo(
         Spacer(Modifier.height(6.dp))
 
         Text(
-            text = "JalJayo telah mengalibrasi ritme biologis dan audio relaksasi malam Anda.",
+            text = "Ritme biologis sirkadianmu telah terkalibrasi.",
             fontSize = 13.sp,
-            color = DayTextSecondary,
-            lineHeight = 18.sp
+            color = DayTextSecondary
         )
 
-        Spacer(Modifier.height(20.dp))
+        Spacer(Modifier.height(24.dp))
 
-        // Ringkasan Bersih: Hanya memuat Preset dan Target Bangun
+        // Clean Summary Card (RANGKUMAN RITME HARIAN)
         TactileCard {
-            Column(modifier = Modifier.padding(16.dp)) {
+            Column(modifier = Modifier.padding(18.dp)) {
+                Text(
+                    text = "RANGKUMAN RITME HARIAN",
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF64748B),
+                    letterSpacing = 0.5.sp
+                )
+
+                Spacer(Modifier.height(14.dp))
+
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
-                        text = "PRESET RELAKSASI MALAM",
-                        fontSize = 11.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = DayPrimary,
-                        letterSpacing = 0.5.sp
-                    )
-                    Text("✓ Terkalibrasi", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = DaySuccess)
-                }
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Box(
+                            modifier = Modifier
+                                .size(36.dp)
+                                .clip(CircleShape)
+                                .background(Color(0xFFEFF6FF)),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text("🌙", fontSize = 18.sp)
+                        }
+                        Spacer(Modifier.width(10.dp))
+                        Column {
+                            Text("Waktu Tidur Ideal", fontSize = 11.sp, color = DayTextSecondary)
+                            Text(
+                                text = "%02d.%02d WIB".format(bedtimeHour, bedtimeMinute),
+                                fontSize = 15.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onBackground
+                            )
+                        }
+                    }
 
-                Spacer(Modifier.height(10.dp))
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text("🎧", fontSize = 26.sp)
-                    Spacer(Modifier.width(12.dp))
-                    Column {
-                        Text(
-                            text = preset.displayName,
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onBackground
-                        )
-                        Text(
-                            text = "Target Bangun: %02d:%02d WIB".format(wakeHour, wakeMinute),
-                            fontSize = 12.sp,
-                            color = DayTextSecondary
-                        )
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Box(
+                            modifier = Modifier
+                                .size(36.dp)
+                                .clip(CircleShape)
+                                .background(Color(0xFFFEF3C7)),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text("☀️", fontSize = 18.sp)
+                        }
+                        Spacer(Modifier.width(10.dp))
+                        Column {
+                            Text("Waktu Bangun Pagi", fontSize = 11.sp, color = DayTextSecondary)
+                            Text(
+                                text = "%02d.%02d WIB".format(wakeHour, wakeMinute),
+                                fontSize = 15.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onBackground
+                            )
+                        }
                     }
                 }
-            }
-        }
 
-        Spacer(Modifier.height(14.dp))
+                Spacer(Modifier.height(14.dp))
+                HorizontalDivider(color = Color(0xFFE2E8F0), thickness = 1.dp)
+                Spacer(Modifier.height(12.dp))
 
-        // Catatan Transparansi Rekonfigurasi
-        TactileCard(
-            backgroundColor = Color(0xFFFEFCE8),
-            borderColor = Color(0xFFFEF08A),
-            shadowColor = Color(0xFFFDE047)
-        ) {
-            Row(
-                modifier = Modifier.padding(14.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text("ℹ️", fontSize = 20.sp)
-                Spacer(Modifier.width(10.dp))
-                Column {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text("Durasi: ", fontSize = 12.sp, color = DayTextSecondary)
                     Text(
-                        text = "Pengaturan Fleksibel",
+                        text = "%.1f Jam (5 Siklus REM/NREM Penuh)".format(sleepDuration),
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color(0xFF854D0E)
-                    )
-                    Text(
-                        text = "Konfigurasi jadwal dan pilihan audio dapat disesuaikan kembali sewaktu-waktu di menu Pengaturan.",
-                        fontSize = 11.sp,
-                        color = Color(0xFFA16207),
-                        lineHeight = 15.sp
+                        color = DayPrimary
                     )
                 }
             }
@@ -791,22 +803,12 @@ private fun StepConfirmDuolingo(
 
         Spacer(Modifier.height(28.dp))
 
-        // Tombol Mulai JalJayo Utama
         Tactile3DButton(
-            text = "Mulai JalJayo 🚀",
+            text = "MULAI SEKARANG 🚀",
             onClick = onConfirm,
-            containerColor = DaySuccess,
-            shadowColor = DaySuccessDark
-        )
-
-        Spacer(Modifier.height(10.dp))
-
-        Text(
-            text = "Zero-Login • 100% Data Tersimpan Aman di Perangkat Anda",
-            fontSize = 11.sp,
-            color = DayTextSecondary,
-            modifier = Modifier.fillMaxWidth(),
-            textAlign = TextAlign.Center
+            containerColor = Color(0xFF22C55E),
+            shadowColor = Color(0xFF15803D),
+            modifier = Modifier.fillMaxWidth()
         )
 
         Spacer(Modifier.height(16.dp))

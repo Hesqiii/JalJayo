@@ -103,12 +103,19 @@ fun SettingsScreen(
                 Text("←", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = DayPrimary)
             }
             Spacer(Modifier.width(12.dp))
-            Text(
-                text = "Pengaturan & Preferensi",
-                fontSize = 20.sp,
-                fontWeight = FontWeight.ExtraBold,
-                color = MaterialTheme.colorScheme.onBackground
-            )
+            Column {
+                Text(
+                    text = "Pengaturan & Jadwal ⚙️",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.ExtraBold,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+                Text(
+                    text = "Kustomisasi Jadwal Sirkadian Mandiri",
+                    fontSize = 11.5.sp,
+                    color = DayTextSecondary
+                )
+            }
         }
 
         Column(
@@ -118,23 +125,106 @@ fun SettingsScreen(
         ) {
             Spacer(Modifier.height(8.dp))
 
-            // === Bagian 1: Jadwal Sirkadian ===
-            Text(
-                text = "PROFIL & JADWAL SIRKADIAN",
-                fontSize = 11.sp,
-                fontWeight = FontWeight.ExtraBold,
-                color = DayPrimary,
-                letterSpacing = 1.sp
-            )
-            Spacer(Modifier.height(8.dp))
-
+            // === Bagian 1: Jadwal Sirkadian (Wireframe Screen 8 Sync) ===
+            // Card 1: Target Jam Tidur Malam
             TactileCard {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(
-                        text = "Target Jam Bangun Pagi (Fleksibel)",
-                        fontSize = 14.sp,
+                        text = "TARGET JAM TIDUR MALAM",
+                        fontSize = 12.sp,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onBackground
+                        color = Color(0xFF475569),
+                        letterSpacing = 0.5.sp
+                    )
+                    Spacer(Modifier.height(12.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(36.dp)
+                                .clip(CircleShape)
+                                .background(Color(0xFFEFF6FF))
+                                .border(1.dp, Color(0xFFBFDBFE), CircleShape)
+                                .clickable {
+                                    // Kurangi 1 jam bangun agar jam tidur mundur 1 jam
+                                    wakeHour = if (wakeHour == 0) 23 else wakeHour - 1
+                                },
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text("−", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = DayPrimary)
+                        }
+
+                        Spacer(Modifier.width(12.dp))
+
+                        Box(
+                            modifier = Modifier
+                                .width(75.dp)
+                                .height(50.dp)
+                                .clip(RoundedCornerShape(12.dp))
+                                .background(Color.White)
+                                .border(1.5.dp, Color(0xFFCBD5E1), RoundedCornerShape(12.dp)),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = "%02d".format(schedule.bedtime.hour),
+                                fontSize = 22.sp,
+                                fontWeight = FontWeight.ExtraBold,
+                                color = Color(0xFF0F172A)
+                            )
+                        }
+
+                        Text(" : ", fontSize = 22.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF94A3B8))
+
+                        Box(
+                            modifier = Modifier
+                                .width(75.dp)
+                                .height(50.dp)
+                                .clip(RoundedCornerShape(12.dp))
+                                .background(Color.White)
+                                .border(1.5.dp, Color(0xFFCBD5E1), RoundedCornerShape(12.dp)),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = "%02d".format(schedule.bedtime.minute),
+                                fontSize = 22.sp,
+                                fontWeight = FontWeight.ExtraBold,
+                                color = Color(0xFF0F172A)
+                            )
+                        }
+
+                        Spacer(Modifier.width(12.dp))
+
+                        Box(
+                            modifier = Modifier
+                                .size(36.dp)
+                                .clip(CircleShape)
+                                .background(Color(0xFFEFF6FF))
+                                .border(1.dp, Color(0xFFBFDBFE), CircleShape)
+                                .clickable {
+                                    wakeHour = (wakeHour + 1) % 24
+                                },
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text("+", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = DayPrimary)
+                        }
+                    }
+                }
+            }
+
+            Spacer(Modifier.height(14.dp))
+
+            // Card 2: Target Jam Bangun Pagi (Wireframe Screen 8)
+            TactileCard {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Text(
+                        text = "TARGET JAM BANGUN PAGI",
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF475569),
+                        letterSpacing = 0.5.sp
                     )
                     Spacer(Modifier.height(4.dp))
                     Text(
@@ -448,12 +538,13 @@ fun SettingsScreen(
 
             Spacer(Modifier.height(24.dp))
 
-            // === Tombol Simpan Taktil Duolingo ===
+            // === Tombol Simpan Taktil Duolingo (Wireframe Screen 8 Sync) ===
             Tactile3DButton(
-                text = "Simpan Pengaturan 💾",
+                text = "SIMPAN PERUBAHAN",
                 onClick = { onSave(wakeHour, wakeMinute, selectedPreset) },
-                containerColor = DayPrimary,
-                shadowColor = DayPrimaryDark
+                containerColor = Color(0xFF22C55E),
+                shadowColor = Color(0xFF15803D),
+                modifier = Modifier.fillMaxWidth()
             )
 
             Spacer(Modifier.height(28.dp))

@@ -99,6 +99,30 @@ fun NightScreen(
     ) {
         Spacer(Modifier.height(16.dp))
 
+        // === Top Bar (Wireframe Screen 7 Sync) ===
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Start,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column {
+                Text(
+                    text = "Ruang Relaksasi Malam 🌙",
+                    fontSize = 19.sp,
+                    fontWeight = FontWeight.ExtraBold,
+                    color = Color(0xFFF8FAFC)
+                )
+                Spacer(Modifier.height(2.dp))
+                Text(
+                    text = "Audio Gelombang Otak & Derau Putih",
+                    fontSize = 11.5.sp,
+                    color = Color(0xFF94A3B8)
+                )
+            }
+        }
+
+        Spacer(Modifier.height(14.dp))
+
         // === Night Lockout Info Banner ===
         TactileCard(
             backgroundColor = NightSurface,
@@ -206,7 +230,7 @@ fun NightScreen(
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
-                        text = if (isPlaying) "⏸" else "▶",
+                        text = if (isPlaying) "⏸" else "🎧",
                         fontSize = 38.sp,
                         color = Color.White
                     )
@@ -226,7 +250,7 @@ fun NightScreen(
         Spacer(Modifier.height(4.dp))
 
         Text(
-            text = if (isPlaying) "Audio sedang berputar di latar belakang" else "Ketuk untuk memulai relaksasi",
+            text = "Menyelaraskan frekuensi otak ke gerbang tidur",
             fontSize = 12.sp,
             color = NightTextSecondary
         )
@@ -356,18 +380,19 @@ fun NightScreen(
 
         Spacer(Modifier.height(28.dp))
 
-        // === Tombol Taktil Putar & Kunci Layar ===
+        // === Tombol Taktil Putar & Kunci Layar (Wireframe Screen 7 Sync) ===
         Tactile3DButton(
-            text = if (isPlaying) "⏸ Jeda Audio Relaksasi" else "▶ Putar & Kunci Layar",
+            text = if (isPlaying) "⏸ JEDA AUDIO RELAKSASI" else "▶ PUTAR & KUNCI LAYAR",
             onClick = onPlayPauseClick,
-            containerColor = NightPrimary,
-            shadowColor = NightPrimaryDark
+            containerColor = Color(0xFF4F46E5),
+            shadowColor = Color(0xFF3730A3),
+            modifier = Modifier.fillMaxWidth()
         )
 
         Spacer(Modifier.height(8.dp))
 
         Text(
-            text = "Layar aman dipadamkan • Audio tetap berputar di latar belakang",
+            text = "Layar aman dipadamkan • Audio otomatis berhenti",
             fontSize = 11.sp,
             color = NightTextSecondary,
             textAlign = TextAlign.Center
